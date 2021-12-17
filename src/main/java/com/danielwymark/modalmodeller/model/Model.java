@@ -7,10 +7,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class Model {
-    protected final List<World> worlds;
-    protected final HashMap<World, List<World>> accessMap;
-    protected final HashMap<World, List<SingularFormula>> valuationMap;
+/**
+ * Represents a possible worlds model, which is defined by a set of worlds W,
+ * an accessibility relation on worlds R, and a valuation map V(s, p) which
+ * maps propositions to true or false in a world.
+ */
+public final class Model {
+    private final List<World> worlds;
+    private final HashMap<World, List<World>> accessMap;
+    private final HashMap<World, List<SingularFormula>> valuationMap;
 
     public Model(List<World> worlds, HashMap<World, List<World>> accessMap, HashMap<World, List<SingularFormula>> valuationMap) {
         this.worlds = worlds;
@@ -29,4 +34,6 @@ public class Model {
     public List<SingularFormula> propositionsTrueAt(World world) {
         return Collections.unmodifiableList(valuationMap.get(world));
     }
+
+    // TODO: implement a graphvis output function
 }

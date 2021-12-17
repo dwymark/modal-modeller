@@ -2,7 +2,11 @@ package com.danielwymark.modalmodeller.model;
 
 import java.util.Objects;
 
-public class World {
+/**
+ * Represents a single world in a possible worlds model.
+ * Essentially, this is just a wrapper over an index.
+ */
+public final class World {
     public final int index;
 
     public World(int index) {

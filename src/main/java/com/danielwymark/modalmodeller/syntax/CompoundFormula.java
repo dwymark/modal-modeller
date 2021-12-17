@@ -4,7 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class CompoundFormula extends Formula {
+/**
+ * Represents a compound of SingularFormulas in a language with one
+ * pair of modal operators.
+ */
+public final class CompoundFormula extends Formula {
     public final Operator operator;
     public final Formula[] operands;
 

@@ -6,7 +6,7 @@ import java.util.Objects;
  * Represents a single proposition. Typically, these are called "atomic" formulas,
  * but in the context of Java that is a confusing name.
  */
-public class SingularFormula extends Formula {
+public final class SingularFormula extends Formula {
     public final String letter;
 
     public SingularFormula(String letter) {
