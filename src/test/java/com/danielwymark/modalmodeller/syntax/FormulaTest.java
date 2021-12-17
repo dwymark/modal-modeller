@@ -6,17 +6,17 @@ import org.junit.Test;
 public class FormulaTest {
     @Test
     public void atomicFormulaStrings() {
-        var atomP = new AtomicFormula("p");
-        var atomQ = new AtomicFormula("q");
+        var atomP = new SingularFormula("p");
+        var atomQ = new SingularFormula("q");
         Assert.assertEquals(atomP.toString(), "p");
         Assert.assertEquals(atomQ.toString(), "q");
     }
 
     @Test
     public void operatorFormulaStrings() {
-        var atomP = new AtomicFormula("p");
-        var atomQ = new AtomicFormula("q");
-        var atomR = new AtomicFormula("q");
+        var atomP = new SingularFormula("p");
+        var atomQ = new SingularFormula("q");
+        var atomR = new SingularFormula("q");
 
         var notP = new CompoundFormula(Operator.NEGATE, atomP);
         var mustQ = new CompoundFormula(Operator.MUST, atomQ);

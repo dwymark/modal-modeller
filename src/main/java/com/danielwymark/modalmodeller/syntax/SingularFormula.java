@@ -2,10 +2,14 @@ package com.danielwymark.modalmodeller.syntax;
 
 import java.util.Objects;
 
-public class AtomicFormula extends Formula {
+/**
+ * Represents a single proposition. Typically, these are called "atomic" formulas,
+ * but in the context of Java that is a confusing name.
+ */
+public class SingularFormula extends Formula {
     public final String letter;
 
-    public AtomicFormula(String letter) {
+    public SingularFormula(String letter) {
         this.letter = letter;
     }
 
@@ -18,7 +22,7 @@ public class AtomicFormula extends Formula {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AtomicFormula that = (AtomicFormula) o;
+        SingularFormula that = (SingularFormula) o;
         return Objects.equals(letter, that.letter);
     }
 
