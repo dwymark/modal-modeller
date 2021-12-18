@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class FormulaTest {
     @Test
-    public void atomicFormulaStrings() {
+    public void AtomicFormulaStringsAreCorrect() {
         var atomP = new SingularFormula("p");
         var atomQ = new SingularFormula("q");
         Assert.assertEquals(atomP.toString(), "p");
@@ -13,7 +13,7 @@ public class FormulaTest {
     }
 
     @Test
-    public void operatorFormulaStrings() {
+    public void OperatorFormulaStringsAreCorrect() {
         var atomP = new SingularFormula("p");
         var atomQ = new SingularFormula("q");
         var atomR = new SingularFormula("q");
