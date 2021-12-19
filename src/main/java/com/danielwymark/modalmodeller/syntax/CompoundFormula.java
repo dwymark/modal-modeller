@@ -9,21 +9,24 @@ import java.util.Objects;
  * pair of modal operators.
  */
 public final class CompoundFormula extends Formula {
-    public final Operator operator;
-    public final Formula[] operands;
-
-    public CompoundFormula(Operator operator, Formula operand) {
-        this.operator = operator;
-        this.operands = new Formula[]{operand};
-    }
+    public final Formula operand1;
+    public final Formula operand2;
 
     public CompoundFormula(Operator operator, Formula operand1, Formula operand2) {
-        this.operator = operator;
-        this.operands = new Formula[]{operand1, operand2};
+        super(operator);
+        this.operand1 = operand1;
+        this.operand2 = operand2;
+    }
+
+    public CompoundFormula(Operator operator, Formula operand) {
+        super(operator);
+        this.operand1 = operand;
+        operand2 = null;
     }
 
     private String operatorString() {
         return switch (operator) {
+            case NONE -> "";
             case NEGATE -> "¬";
             case JOIN -> "⋁";
             case MEET -> "⋀";
@@ -34,10 +37,9 @@ public final class CompoundFormula extends Formula {
 
     @Override
     public String toString() {
-        List<String> args = Arrays.stream(operands).map(Object::toString).toList();
         return switch (operator) {
-            case NEGATE, MUST, MIGHT -> operatorString() + operands[0];
-            default -> "(" + String.join(operatorString(), args) + ")";
+            case NEGATE, MUST, MIGHT -> operatorString() + operand1;
+            default -> "(" + operand1 + operatorString() + operand2 + ")";
         };
     }
 
@@ -46,13 +48,11 @@ public final class CompoundFormula extends Formula {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CompoundFormula that = (CompoundFormula) o;
-        return operator == that.operator && Arrays.equals(operands, that.operands);
+        return operator == that.operator && Objects.equals(operand1, that.operand1) && Objects.equals(operand2, that.operand2);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(operator);
-        result = 31 * result + Arrays.hashCode(operands);
-        return result;
+        return Objects.hash(operator, operand1, operand2);
     }
 }

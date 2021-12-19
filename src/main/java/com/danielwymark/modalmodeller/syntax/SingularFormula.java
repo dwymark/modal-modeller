@@ -10,6 +10,7 @@ public final class SingularFormula extends Formula {
     public final String letter;
 
     public SingularFormula(String letter) {
+        super(Operator.NONE);
         this.letter = letter;
     }
 
