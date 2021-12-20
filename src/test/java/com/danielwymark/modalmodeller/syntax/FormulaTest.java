@@ -14,19 +14,16 @@ public class FormulaTest {
 
     @Test
     public void OperatorFormulaStringsAreCorrect() {
-        var atomP = new SingularFormula("p");
-        var atomQ = new SingularFormula("q");
-        var atomR = new SingularFormula("q");
+        var p = new SingularFormula("p");
+        var q = new SingularFormula("q");
 
-        var notP = new CompoundFormula(Operator.NEGATE, atomP);
-        var mustQ = new CompoundFormula(Operator.MUST, atomQ);
-        var mightP = new CompoundFormula(Operator.MIGHT, atomR);
+        Assert.assertEquals("¬p", Formula.negate(p).toString());
+        Assert.assertEquals("□q", Formula.must(q).toString());
+        Assert.assertEquals("◇q", Formula.might(q).toString());
 
-        Assert.assertEquals("¬p", notP.toString());
-        Assert.assertEquals("□q", mustQ.toString());
-        Assert.assertEquals("◇q", mightP.toString());
+        Assert.assertEquals("(¬p⋁q)", Formula.negate(p).or(q).toString());
+        Assert.assertEquals("(□q⋀◇p)", Formula.must(q).and(Formula.might(p)).toString());
 
-        Assert.assertEquals("(¬p⋁q)", new CompoundFormula(Operator.JOIN, notP, atomQ).toString());
-        Assert.assertEquals("(□q⋀□q)", new CompoundFormula(Operator.MEET, mustQ, mustQ).toString());
+        Assert.assertEquals("((¬p⋁q)⋀(¬q⋁p))", p.implies(q).and(q.implies(p)).toString());
     }
 }
