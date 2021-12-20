@@ -22,31 +22,22 @@ public class ModelTest {
         //     M,2 |= {top};
         //     M,3 |= {q, top}
 
-        var letters = new LinkedList<>(List.of(
-                new SingularFormula("p"),
-                new SingularFormula("q"),
-                new SingularFormula("top")
-        ));
+        final int NUM_WORLDS = 4;
+        var modelFactory = new ModelFactory(NUM_WORLDS);
+        modelFactory.addRelation(0, 0);
+        modelFactory.addRelation(0, 1);
+        modelFactory.addRelation(0, 2);
+        modelFactory.addRelation(1, 2);
+        modelFactory.addRelation(3, 1);
+        modelFactory.addTruth(0, "p");
+        modelFactory.addTruth(0, "q");
+        modelFactory.addTruth(1, "p");
+        modelFactory.addTruth(3, "q");
+        for (int i = 0; i < NUM_WORLDS; ++i) {
+            modelFactory.addTruth(i, "top");
+        }
 
-        var worlds = new LinkedList<>(List.of(
-                new World(0), new World(1), new World(2), new World(3)));
-
-        var accessMap = new HashMap<>(Map.of(
-                worlds.get(0), new HashSet<>(Set.of(
-                        worlds.get(0), worlds.get(1), worlds.get(2))),
-                worlds.get(1), new HashSet<>(Set.of(worlds.get(2))),
-                worlds.get(2), new HashSet<World>(),
-                worlds.get(3), new HashSet<>(Set.of(worlds.get(1)))
-        ));
-
-        var valuationMap = new HashMap<>(Map.of(
-                worlds.get(0), new HashSet<>(Set.of(letters.get(0), letters.get(1), letters.get(2))),
-                worlds.get(1), new HashSet<>(Set.of(letters.get(0), letters.get(2))),
-                worlds.get(2), new HashSet<>(Set.of(letters.get(2))),
-                worlds.get(3), new HashSet<>(Set.of(letters.get(1), letters.get(2)))
-        ));
-
-        return new Model(worlds, accessMap, valuationMap);
+        return modelFactory.build();
     }
 
     @Test

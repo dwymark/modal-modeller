@@ -14,14 +14,14 @@ public final class Model {
     private final List<World> worlds;
     private final Map<World, HashSet<World>> accessMap;
     private final Map<World, HashSet<SingularFormula>> valuationMap;
-    private final HashMap<Integer, World> worldMap;
+    private final HashMap<Integer, World> worldIndexMap;
 
     public Model(List<World> worlds, Map<World, HashSet<World>> accessMap,
                  Map<World, HashSet<SingularFormula>> valuationMap) {
         this.worlds = worlds;
-        worldMap = new HashMap<>();
+        worldIndexMap = new HashMap<>();
         for (var world : worlds) {
-            worldMap.put(world.index, world);
+            worldIndexMap.put(world.index, world);
         }
         this.accessMap = accessMap;
         this.valuationMap = valuationMap;
@@ -33,7 +33,7 @@ public final class Model {
 
     public World getWorld(int i) throws OutOfDomainError {
         assertInDomain(i);
-        return worldMap.get(i);
+        return worldIndexMap.get(i);
     }
 
     public Set<World> worldsAccessibleFrom(World world) throws OutOfDomainError {
@@ -59,7 +59,7 @@ public final class Model {
     }
 
     private void assertInDomain(int i) throws OutOfDomainError {
-        if (!worldMap.containsKey(i))
+        if (!worldIndexMap.containsKey(i))
             throw new OutOfDomainError("World " + i + " not in domain of model");
     }
 
