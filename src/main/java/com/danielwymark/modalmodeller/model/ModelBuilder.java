@@ -23,11 +23,11 @@ public class ModelBuilder {
         tentativeValuationMap = new HashMap<>();
     }
 
-    void setNumWorlds(int n) {
+    public void setNumWorlds(int n) {
         numWorlds = n;
     }
 
-    void addRelation(int w1, int w2) {
+    public void addRelation(int w1, int w2) {
         if (tentativeAccessMap.containsKey(w1)) {
             tentativeAccessMap.get(w1).add(w2);
         }
@@ -36,7 +36,7 @@ public class ModelBuilder {
         }
     }
 
-    void addTruth(int w, String letter) {
+    public void addTruth(int w, String letter) {
         if (tentativeValuationMap.containsKey(w)) {
             tentativeValuationMap.get(w).add(letter);
         }
@@ -45,7 +45,7 @@ public class ModelBuilder {
         }
     }
 
-    Model build() {
+    public Model build() {
         // (1) Construct world list
         var worlds = new ArrayList<World>();
         for (int i = 0; i < numWorlds; ++i) {
