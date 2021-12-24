@@ -5,8 +5,6 @@ import com.danielwymark.modalmodeller.syntax.SingularFormula;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.*;
-
 public class ModelTest {
 
     public static Model getMockModel() {
@@ -23,7 +21,7 @@ public class ModelTest {
         //     M,3 |= {q, top}
 
         final int NUM_WORLDS = 4;
-        var modelFactory = new ModelFactory(NUM_WORLDS);
+        var modelFactory = new ModelBuilder(NUM_WORLDS);
         modelFactory.addRelation(0, 0);
         modelFactory.addRelation(0, 1);
         modelFactory.addRelation(0, 2);

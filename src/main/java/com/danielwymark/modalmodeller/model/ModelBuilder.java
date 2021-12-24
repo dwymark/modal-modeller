@@ -12,12 +12,12 @@ import java.util.Set;
  * The factory is mutable, but any given model is immutable once
  * it has been produced.
  */
-public class ModelFactory {
+public class ModelBuilder {
     private int numWorlds;
     private final HashMap<Integer, HashSet<Integer>> tentativeAccessMap;
     private final HashMap<Integer, HashSet<String>> tentativeValuationMap;
 
-    public ModelFactory(int numWorlds) {
+    public ModelBuilder(int numWorlds) {
         this.numWorlds = numWorlds;
         tentativeAccessMap = new HashMap<>();
         tentativeValuationMap = new HashMap<>();
