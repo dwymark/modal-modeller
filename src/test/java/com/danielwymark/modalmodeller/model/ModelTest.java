@@ -21,21 +21,21 @@ public class ModelTest {
         //     M,3 |= {q, top}
 
         final int NUM_WORLDS = 4;
-        var modelFactory = new ModelBuilder(NUM_WORLDS);
-        modelFactory.addRelation(0, 0);
-        modelFactory.addRelation(0, 1);
-        modelFactory.addRelation(0, 2);
-        modelFactory.addRelation(1, 2);
-        modelFactory.addRelation(3, 1);
-        modelFactory.addTruth(0, "p");
-        modelFactory.addTruth(0, "q");
-        modelFactory.addTruth(1, "p");
-        modelFactory.addTruth(3, "q");
+        var modelBuilder = new ModelBuilder(NUM_WORLDS);
+        modelBuilder.addRelation(0, 0);
+        modelBuilder.addRelation(0, 1);
+        modelBuilder.addRelation(0, 2);
+        modelBuilder.addRelation(1, 2);
+        modelBuilder.addRelation(3, 1);
+        modelBuilder.addTruth(0, "p");
+        modelBuilder.addTruth(0, "q");
+        modelBuilder.addTruth(1, "p");
+        modelBuilder.addTruth(3, "q");
         for (int i = 0; i < NUM_WORLDS; ++i) {
-            modelFactory.addTruth(i, "top");
+            modelBuilder.addTruth(i, "top");
         }
 
-        return modelFactory.build();
+        return modelBuilder.build();
     }
 
     @Test
