@@ -5,6 +5,6 @@ import com.danielwymark.modalmodeller.model.Model;
 import java.util.List;
 
 public interface BisimulationSolver {
-    Relation findBisimulation(Model left, Model right); // return null if none
-    List<Relation> findAllBisimulations(Model left, Model right); // return empty list if none
+    List<Relation> findBisimulations(Model model1, Model model2);
+    List<Relation> findBisimulations(Model model);
 }
