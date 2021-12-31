@@ -2,21 +2,16 @@ package com.danielwymark.modalmodeller.model;
 
 import com.danielwymark.modalmodeller.exceptions.OutOfDomainError;
 import com.danielwymark.modalmodeller.syntax.SingularFormula;
-import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Font;
 import guru.nidi.graphviz.attribute.Rank;
-import guru.nidi.graphviz.attribute.Style;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 
 import java.util.*;
 
-import static guru.nidi.graphviz.attribute.Attributes.attr;
-import static guru.nidi.graphviz.attribute.Rank.RankDir.LEFT_TO_RIGHT;
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
-import static guru.nidi.graphviz.model.Link.to;
 
 /**
  * Represents a possible worlds model, which is defined by a set of worlds W,
@@ -25,12 +20,12 @@ import static guru.nidi.graphviz.model.Link.to;
  */
 public final class Model {
     private final List<World> worlds;
-    private final Map<World, HashSet<World>> accessMap;
-    private final Map<World, HashSet<SingularFormula>> valuationMap;
-    private final HashMap<Integer, World> worldIndexMap;
+    private final Map<World, Set<World>> accessMap;
+    private final Map<World, Set<SingularFormula>> valuationMap;
+    private final Map<Integer, World> worldIndexMap;
 
-    public Model(List<World> worlds, Map<World, HashSet<World>> accessMap,
-                 Map<World, HashSet<SingularFormula>> valuationMap) {
+    public Model(List<World> worlds, Map<World, Set<World>> accessMap,
+                 Map<World, Set<SingularFormula>> valuationMap) {
         this.worlds = worlds;
         worldIndexMap = new HashMap<>();
         for (var world : worlds) {
@@ -67,11 +62,11 @@ public final class Model {
         return worlds;
     }
 
-    public Map<World, HashSet<World>> accessMap() {
+    public Map<World, Set<World>> accessMap() {
         return accessMap;
     }
 
-    public Map<World, HashSet<SingularFormula>> valuationMap() {
+    public Map<World, Set<SingularFormula>> valuationMap() {
         return valuationMap;
     }
 

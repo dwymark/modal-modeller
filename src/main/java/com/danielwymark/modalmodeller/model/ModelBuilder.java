@@ -14,8 +14,8 @@ import java.util.Set;
  */
 public class ModelBuilder {
     private int numWorlds;
-    private final HashMap<Integer, HashSet<Integer>> tentativeAccessMap;
-    private final HashMap<Integer, HashSet<String>> tentativeValuationMap;
+    private final HashMap<Integer, Set<Integer>> tentativeAccessMap;
+    private final HashMap<Integer, Set<String>> tentativeValuationMap;
 
     public ModelBuilder(int numWorlds) {
         this.numWorlds = numWorlds;
@@ -52,8 +52,8 @@ public class ModelBuilder {
             worlds.add(new World(i));
         }
 
-        var accessMap = new HashMap<World, HashSet<World>>();
-        var valuationMap = new HashMap<World, HashSet<SingularFormula>>();
+        var accessMap = new HashMap<World, Set<World>>();
+        var valuationMap = new HashMap<World, Set<SingularFormula>>();
         for (int i = 0; i < numWorlds; ++i) {
             // (2) Construct access map
             var neighbors = new HashSet<World>();
