@@ -17,10 +17,10 @@ public class ShellApp {
         modelBuilder.addRelation(0, 2);
         modelBuilder.addRelation(1, 2);
         modelBuilder.addRelation(3, 1);
-        modelBuilder.addTruth(0, "p");
-        modelBuilder.addTruth(0, "q");
-        modelBuilder.addTruth(1, "p");
-        modelBuilder.addTruth(3, "q");
+        modelBuilder.addFact(0, "p");
+        modelBuilder.addFact(0, "q");
+        modelBuilder.addFact(1, "p");
+        modelBuilder.addFact(3, "q");
 
         Model model = modelBuilder.build();
         try {

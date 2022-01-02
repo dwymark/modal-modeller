@@ -6,10 +6,10 @@ import java.util.Objects;
  * Represents a single proposition. Typically, these are called "atomic" formulas,
  * but in the context of Java that is a confusing name.
  */
-public final class SingularFormula extends Formula {
+public final class AtomicFormula extends Formula {
     public final String letter;
 
-    public SingularFormula(String letter) {
+    public AtomicFormula(String letter) {
         super(Operator.NONE);
         this.letter = letter;
     }
@@ -23,7 +23,7 @@ public final class SingularFormula extends Formula {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SingularFormula that = (SingularFormula) o;
+        AtomicFormula that = (AtomicFormula) o;
         return Objects.equals(letter, that.letter);
     }
 

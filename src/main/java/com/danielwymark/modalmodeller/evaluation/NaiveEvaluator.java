@@ -5,14 +5,14 @@ import com.danielwymark.modalmodeller.model.Model;
 import com.danielwymark.modalmodeller.model.World;
 import com.danielwymark.modalmodeller.syntax.CompoundFormula;
 import com.danielwymark.modalmodeller.syntax.Formula;
-import com.danielwymark.modalmodeller.syntax.SingularFormula;
+import com.danielwymark.modalmodeller.syntax.AtomicFormula;
 
 public class NaiveEvaluator implements Evaluator {
     @Override
     public boolean evaluate(Model model, World world, Formula formula) throws OutOfDomainError {
         switch (formula.operator) {
             case NONE -> {
-                return model.propositionsTrueAt(world).contains((SingularFormula) formula);
+                return model.propositionsTrueAt(world).contains((AtomicFormula) formula);
             }
             case NEGATE -> {
                 return !evaluate(model, world, ((CompoundFormula) formula).operand1);

@@ -1,7 +1,7 @@
 package com.danielwymark.modalmodeller.model;
 
 import com.danielwymark.modalmodeller.exceptions.OutOfDomainError;
-import com.danielwymark.modalmodeller.syntax.SingularFormula;
+import com.danielwymark.modalmodeller.syntax.AtomicFormula;
 import guru.nidi.graphviz.attribute.Font;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
@@ -19,20 +19,38 @@ import static guru.nidi.graphviz.model.Factory.node;
  * maps propositions to true or false in a world.
  */
 public final class Model {
-    private final List<World> worlds;
-    private final Map<World, Set<World>> accessMap;
-    private final Map<World, Set<SingularFormula>> valuationMap;
-    private final Map<Integer, World> worldIndexMap;
+    private final World[] worlds;
+    private final Set<World>[] accessMap;
+    private final Set<AtomicFormula>[] valuationMap;
+    private final int numWorlds;
+    private static long nextModelNum = 0;
 
-    public Model(List<World> worlds, Map<World, Set<World>> accessMap,
-                 Map<World, Set<SingularFormula>> valuationMap) {
-        this.worlds = worlds;
-        worldIndexMap = new HashMap<>();
-        for (var world : worlds) {
-            worldIndexMap.put(world.index, world);
+    @SuppressWarnings("unchecked") // array of sets
+    public Model(int numWorlds, List<Set<Integer>> accessMap, List<Set<String>> valuationMap) {
+        long modelIdentifier = nextModelNum++;
+        this.numWorlds = numWorlds;
+
+        worlds = new World[numWorlds];
+        for (int i = 0; i < numWorlds; ++i) {
+            worlds[i] = new World(i, modelIdentifier);
         }
-        this.accessMap = accessMap;
-        this.valuationMap = valuationMap;
+
+
+        this.accessMap = new Set[numWorlds];
+        for (int i = 0; i < numWorlds; ++i) {
+            this.accessMap[i] = new HashSet<>();
+            for (var worldIdx : accessMap.get(i)) {
+                this.accessMap[i].add(worlds[worldIdx]);
+            }
+        }
+
+        this.valuationMap = new Set[numWorlds];
+        for (int i = 0; i < numWorlds; ++i) {
+            this.valuationMap[i] = new HashSet<>();
+            for (var letter : valuationMap.get(i)) {
+                this.valuationMap[i].add(new AtomicFormula(letter));
+            }
+        }
     }
 
     /*::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -40,34 +58,38 @@ public final class Model {
      */
 
     public List<World> getWorlds() {
-        return Collections.unmodifiableList(worlds);
+        return List.of(worlds);
     }
 
     public World getWorld(int i) throws OutOfDomainError {
         assertInDomain(i);
-        return worldIndexMap.get(i);
+        return worlds[i];
+    }
+
+    public int getNumWorlds() {
+        return numWorlds;
+    }
+
+    //--
+
+    public Set<World> worldsAccessibleFrom(int world) {
+        assertInDomain(world);
+        return Collections.unmodifiableSet(accessMap[world]);
     }
 
     public Set<World> worldsAccessibleFrom(World world) {
-        assertInDomain(world.index);
-        return Collections.unmodifiableSet(accessMap.get(world));
+        return worldsAccessibleFrom(world.index());
     }
 
-    public Set<SingularFormula> propositionsTrueAt(World world) {
-        assertInDomain(world.index);
-        return Collections.unmodifiableSet(valuationMap.get(world));
+    //--
+
+    public Set<AtomicFormula> propositionsTrueAt(int world) {
+        assertInDomain(world);
+        return Collections.unmodifiableSet(valuationMap[world]);
     }
 
-    public List<World> worlds() {
-        return worlds;
-    }
-
-    public Map<World, Set<World>> accessMap() {
-        return accessMap;
-    }
-
-    public Map<World, Set<SingularFormula>> valuationMap() {
-        return valuationMap;
+    public Set<AtomicFormula> propositionsTrueAt(World world) {
+        return propositionsTrueAt(world.index());
     }
 
     /*::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -82,11 +104,11 @@ public final class Model {
 
         for (World world : worlds) {
             var truePropositions = new ArrayList<String>();
-            for (SingularFormula formula : propositionsTrueAt(world)) {
+            for (AtomicFormula formula : propositionsTrueAt(world)) {
                 truePropositions.add(formula.letter);
             }
 
-            var label = Integer.toString(world.index);
+            var label = Integer.toString(world.index());
             if (truePropositions.size() > 0) {
                 label += "\n" + Arrays.toString(truePropositions.stream().sorted().toArray());
             }
@@ -106,7 +128,7 @@ public final class Model {
      */
 
     private void assertInDomain(int i) throws OutOfDomainError {
-        if (!worldIndexMap.containsKey(i))
+        if (i >= numWorlds)
             throw new OutOfDomainError("World " + i + " not in domain of model");
     }
 
@@ -115,26 +137,19 @@ public final class Model {
      */
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (Model) obj;
-        return Objects.equals(this.worlds, that.worlds) &&
-                Objects.equals(this.accessMap, that.accessMap) &&
-                Objects.equals(this.valuationMap, that.valuationMap);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Model model = (Model) o;
+        return numWorlds == model.numWorlds && Arrays.equals(worlds, model.worlds) && Arrays.equals(accessMap, model.accessMap) && Arrays.equals(valuationMap, model.valuationMap);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(worlds, accessMap, valuationMap);
+        int result = Objects.hash(numWorlds);
+        result = 31 * result + Arrays.hashCode(worlds);
+        result = 31 * result + Arrays.hashCode(accessMap);
+        result = 31 * result + Arrays.hashCode(valuationMap);
+        return result;
     }
-
-    @Override
-    public String toString() {
-        return "Model[" +
-                "worlds=" + worlds + ", " +
-                "accessMap=" + accessMap + ", " +
-                "valuationMap=" + valuationMap + ']';
-    }
-
 }

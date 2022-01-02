@@ -3,10 +3,9 @@ package com.danielwymark.modalmodeller.evaluator;
 import com.danielwymark.modalmodeller.evaluation.NaiveEvaluator;
 import com.danielwymark.modalmodeller.exceptions.OutOfDomainError;
 import com.danielwymark.modalmodeller.model.ModelTest;
-import com.danielwymark.modalmodeller.model.World;
+import com.danielwymark.modalmodeller.syntax.AtomicFormula;
 import com.danielwymark.modalmodeller.syntax.CompoundFormula;
 import com.danielwymark.modalmodeller.syntax.Operator;
-import com.danielwymark.modalmodeller.syntax.SingularFormula;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,15 +15,15 @@ public class EvaluatorTest {
         var model = ModelTest.getMockModel();
         var evaluator = new NaiveEvaluator();
 
-        var w0 = new World(0);
-        var w1 = new World(1);
-        var w2 = new World(2);
-        var w3 = new World(3);
+        var w0 = model.getWorld(0);
+        var w1 = model.getWorld(1);
+        var w2 = model.getWorld(2);
+        var w3 = model.getWorld(3);
 
-        var p = new SingularFormula("p");
-        var q = new SingularFormula("q");
-        var bot = new SingularFormula("bot");
-        var top = new SingularFormula("top");
+        var p = new AtomicFormula("p");
+        var q = new AtomicFormula("q");
+        var bot = new AtomicFormula("bot");
+        var top = new AtomicFormula("top");
 
         var pAndQ = new CompoundFormula(Operator.MEET, p, q);
         var pOrQ =  new CompoundFormula(Operator.JOIN, p, q);

@@ -1,7 +1,7 @@
 package com.danielwymark.modalmodeller.model;
 
 import com.danielwymark.modalmodeller.exceptions.OutOfDomainError;
-import com.danielwymark.modalmodeller.syntax.SingularFormula;
+import com.danielwymark.modalmodeller.syntax.AtomicFormula;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,12 +27,12 @@ public class ModelTest {
         modelBuilder.addRelation(0, 2);
         modelBuilder.addRelation(1, 2);
         modelBuilder.addRelation(3, 1);
-        modelBuilder.addTruth(0, "p");
-        modelBuilder.addTruth(0, "q");
-        modelBuilder.addTruth(1, "p");
-        modelBuilder.addTruth(3, "q");
+        modelBuilder.addFact(0, "p");
+        modelBuilder.addFact(0, "q");
+        modelBuilder.addFact(1, "p");
+        modelBuilder.addFact(3, "q");
         for (int i = 0; i < NUM_WORLDS; ++i) {
-            modelBuilder.addTruth(i, "top");
+            modelBuilder.addFact(i, "top");
         }
 
         return modelBuilder.build();
@@ -43,13 +43,13 @@ public class ModelTest {
     public void ModelIsUnmodifiable() {
         var model = getMockModel();
         Assert.assertThrows(UnsupportedOperationException.class, () ->
-                model.getWorlds().set(0, new World(3)));
+                model.getWorlds().set(0, new World(3, 0)));
         Assert.assertThrows(UnsupportedOperationException.class, () ->
                 model.worldsAccessibleFrom(model.getWorld(0))
                         .add(model.getWorld(1)));
         Assert.assertThrows(UnsupportedOperationException.class, () ->
                 model.propositionsTrueAt(model.getWorld(0))
-                        .add(new SingularFormula("r")));
+                        .add(new AtomicFormula("r")));
     }
 
     @Test
@@ -72,20 +72,20 @@ public class ModelTest {
             // object and pass it to member functions without going outside of domain if you
             // choose an appropriate index.
 
-            model.worldsAccessibleFrom(new World(0));
-            model.worldsAccessibleFrom(new World(1));
-            model.worldsAccessibleFrom(new World(2));
+            model.worldsAccessibleFrom(0);
+            model.worldsAccessibleFrom(1);
+            model.worldsAccessibleFrom(2);
 
-            model.propositionsTrueAt(new World(0));
-            model.propositionsTrueAt(new World(1));
-            model.propositionsTrueAt(new World(2));
+            model.propositionsTrueAt(0);
+            model.propositionsTrueAt(1);
+            model.propositionsTrueAt(2);
         }
         catch (OutOfDomainError e) {
             Assert.fail();
         }
 
         Assert.assertThrows(OutOfDomainError.class, () -> model.getWorld(100));
-        Assert.assertThrows(OutOfDomainError.class, () -> model.worldsAccessibleFrom(new World(100)));
-        Assert.assertThrows(OutOfDomainError.class, () -> model.propositionsTrueAt(new World(100)));
+        Assert.assertThrows(OutOfDomainError.class, () -> model.worldsAccessibleFrom(100));
+        Assert.assertThrows(OutOfDomainError.class, () -> model.propositionsTrueAt(100));
     }
 }
