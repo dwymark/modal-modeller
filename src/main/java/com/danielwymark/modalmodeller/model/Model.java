@@ -9,6 +9,7 @@ import guru.nidi.graphviz.model.Node;
 
 import java.util.*;
 
+import static guru.nidi.graphviz.attribute.Rank.RankDir.LEFT_TO_RIGHT;
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
@@ -98,7 +99,7 @@ public final class Model {
 
     public Graph generateGraph() {
         Graph graph = graph("Model " + hashCode()).directed()
-                .graphAttr().with(Rank.dir(TOP_TO_BOTTOM))
+                .graphAttr().with(Rank.dir(LEFT_TO_RIGHT))
                 .nodeAttr().with(Font.name("sans-serif"))
                 .linkAttr().with("class", "link-class");
 

@@ -2,14 +2,16 @@ package com.danielwymark.modalmodeller.app;
 
 import com.danielwymark.modalmodeller.model.Model;
 import com.danielwymark.modalmodeller.model.ModelBuilder;
+import com.danielwymark.modalmodeller.model.FactlessModelGenerator;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShellApp {
-    public static void main(String[] args) {
+    private void testGraphvizSingleModel() {
         final int NUM_WORLDS = 4;
         var modelBuilder = new ModelBuilder(NUM_WORLDS);
         modelBuilder.addRelation(0, 0);
@@ -29,5 +31,21 @@ public class ShellApp {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        final AtomicInteger i = new AtomicInteger(-1);
+        new FactlessModelGenerator().generate()
+                .limit(512+16+2)
+                .forEach((Model model) -> {
+                    try {
+                        Graphviz.fromGraph(model.generateGraph())
+                                .height(600).render(Format.PNG).toFile(new File("model" + i.addAndGet(1) + ".png"));
+                        System.out.println(i);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.exit(-1);
+                    }
+                });
     }
 }

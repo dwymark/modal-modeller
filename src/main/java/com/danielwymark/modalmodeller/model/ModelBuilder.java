@@ -22,6 +22,10 @@ public class ModelBuilder {
         tentativeValuationMap = new HashMap<>();
     }
 
+    public ModelBuilder() {
+        this(0);
+    }
+
     public void setNumWorlds(int n) {
         numWorlds = n;
     }
