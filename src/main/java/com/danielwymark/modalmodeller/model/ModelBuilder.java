@@ -1,6 +1,7 @@
 package com.danielwymark.modalmodeller.model;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -10,7 +11,7 @@ import java.util.*;
  * it has been produced.
  */
 public class ModelBuilder {
-    private final Logger logger = Logger.getLogger(ModelBuilder.class);
+    private final Logger logger = LogManager.getLogger(ModelBuilder.class);
 
     private int numWorlds;
     private final HashMap<Integer, Set<Integer>> tentativeAccessMap;
