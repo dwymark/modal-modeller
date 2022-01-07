@@ -8,6 +8,7 @@ import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static guru.nidi.graphviz.attribute.Rank.RankDir.LEFT_TO_RIGHT;
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
@@ -24,16 +25,17 @@ public final class Model {
     private final Set<World>[] accessMap;
     private final Set<AtomicFormula>[] valuationMap;
     private final int numWorlds;
-    private static long nextModelNum = 0;
+    private final long identifier;
+    private static final AtomicLong nextModelNum = new AtomicLong(0);
 
     @SuppressWarnings("unchecked") // array of sets
     public Model(int numWorlds, List<Set<Integer>> accessMap, List<Set<String>> valuationMap) {
-        long modelIdentifier = nextModelNum++;
+        identifier = nextModelNum.getAndIncrement();
         this.numWorlds = numWorlds;
 
         worlds = new World[numWorlds];
         for (int i = 0; i < numWorlds; ++i) {
-            worlds[i] = new World(i, modelIdentifier);
+            worlds[i] = new World(i, identifier);
         }
 
 
@@ -142,15 +144,11 @@ public final class Model {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Model model = (Model) o;
-        return numWorlds == model.numWorlds && Arrays.equals(worlds, model.worlds) && Arrays.equals(accessMap, model.accessMap) && Arrays.equals(valuationMap, model.valuationMap);
+        return identifier == model.identifier;
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(numWorlds);
-        result = 31 * result + Arrays.hashCode(worlds);
-        result = 31 * result + Arrays.hashCode(accessMap);
-        result = 31 * result + Arrays.hashCode(valuationMap);
-        return result;
+        return Objects.hash(identifier);
     }
 }
