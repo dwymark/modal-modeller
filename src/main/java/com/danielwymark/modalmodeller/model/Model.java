@@ -11,7 +11,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static guru.nidi.graphviz.attribute.Rank.RankDir.LEFT_TO_RIGHT;
-import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
@@ -81,6 +80,8 @@ public final class Model {
     }
 
     public Set<World> worldsAccessibleFrom(World world) {
+        if (world.identifier() != identifier)
+            return new HashSet<>();
         return worldsAccessibleFrom(world.index());
     }
 
@@ -92,6 +93,8 @@ public final class Model {
     }
 
     public Set<AtomicFormula> propositionsTrueAt(World world) {
+        if (world.identifier() != identifier)
+            return new HashSet<>();
         return propositionsTrueAt(world.index());
     }
 
@@ -150,5 +153,13 @@ public final class Model {
     @Override
     public int hashCode() {
         return Objects.hash(identifier);
+    }
+
+    @Override
+    public String toString() {
+        return "Model{" +
+                "numWorlds=" + numWorlds +
+                ", id=" + identifier +
+                '}';
     }
 }

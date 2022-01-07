@@ -3,6 +3,7 @@ package com.danielwymark.modalmodeller.app;
 import com.danielwymark.modalmodeller.model.Model;
 import com.danielwymark.modalmodeller.model.ModelBuilder;
 import com.danielwymark.modalmodeller.model.FactlessModelGenerator;
+import com.danielwymark.modalmodeller.relations.KanellakisSmolkaBisimulationSolver;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 
@@ -33,7 +34,7 @@ public class ShellApp {
         }
     }
 
-    public static void main(String[] args) {
+    private void generateFactlessModels() {
         final AtomicInteger i = new AtomicInteger(-1);
         new FactlessModelGenerator().generate()
                 .limit(512+16+2)
@@ -47,5 +48,20 @@ public class ShellApp {
                         System.exit(-1);
                     }
                 });
+    }
+
+    public static void main(String[] args) {
+        var solver = new KanellakisSmolkaBisimulationSolver();
+        var modelBuilder = new ModelBuilder(2);
+        modelBuilder.addRelation(0, 0);
+        modelBuilder.addRelation(0, 1);
+        Model model1 = modelBuilder.build();
+
+        modelBuilder = new ModelBuilder(2);
+        modelBuilder.addRelation(1, 1);
+        modelBuilder.addRelation(1, 0);
+        Model model2 = modelBuilder.build();
+
+        solver.findBisimulations(model1, model2);
     }
 }
