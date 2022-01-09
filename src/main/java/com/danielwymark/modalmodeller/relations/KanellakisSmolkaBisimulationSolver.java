@@ -36,7 +36,7 @@ public class KanellakisSmolkaBisimulationSolver implements BisimulationSolver {
     private Set<Set<World>> split(List<Model> models, Set<World> block, Set<Set<World>> partitions) {
         Set<World> stableWorlds = new HashSet<>();
         Set<World> splittingWorlds = new HashSet<>();
-        World vantage = block.stream().iterator().next(); // pick an arbitrary vantage point
+        World vantage = block.iterator().next(); // pick an arbitrary vantage point
         for (var world : block) {
             if (world == vantage) {
                 stableWorlds.add(world);

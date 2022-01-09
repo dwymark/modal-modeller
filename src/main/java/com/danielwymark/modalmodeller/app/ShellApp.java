@@ -52,15 +52,18 @@ public class ShellApp {
 
     public static void main(String[] args) {
         var solver = new KanellakisSmolkaBisimulationSolver();
-        var modelBuilder = new ModelBuilder(2);
+        var modelBuilder = new ModelBuilder(3);
         modelBuilder.addRelation(0, 0);
         modelBuilder.addRelation(0, 1);
+        modelBuilder.addRelation(0, 2);
         Model model1 = modelBuilder.build();
 
         modelBuilder = new ModelBuilder(2);
-        modelBuilder.addRelation(1, 1);
+        modelBuilder.addRelation(0, 1);
         modelBuilder.addRelation(1, 0);
         Model model2 = modelBuilder.build();
+
+        // This example doesn't work as expected. Fix your implementation!
 
         solver.findBisimulations(model1, model2);
     }
