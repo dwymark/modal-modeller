@@ -1,9 +1,13 @@
 package com.danielwymark.cmmodels.core.model;
 
+import com.danielwymark.cmmodels.core.exceptions.InvalidModelNumberError;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigInteger;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Convenience class to ease the process of building a model.
@@ -27,14 +31,37 @@ public class ModelBuilder {
         this(0);
     }
 
-    public void setNumWorlds(int n) {
-        numWorlds = n;
+    public static Model buildFromModelNumber(String modelNum) {
+        Pattern r = Pattern.compile("(\\d+)w(\\d+)");
+        Matcher m = r.matcher(modelNum);
+        if (m.matches() && m.groupCount() == 2) {
+            var numWorlds = Integer.parseInt(m.group(1));
+            var accessibilityRelation = new BigInteger(m.group(2));
+            var builder = new ModelBuilder(numWorlds);
+
+            // Every world W's accessibility relation given by a segment of a bitstream.
+            // Each bit in the segment indicates whether W is related to a particular world.
+
+            var mask = BigInteger.ONE;
+            for (int i = 0; i < numWorlds; ++i) {
+                for (int j = 0; j < numWorlds; ++j) {
+                    var masked = mask.and(accessibilityRelation);
+                    if (masked.compareTo(BigInteger.ZERO) != 0) {
+                        builder.addRelation(i, j);
+                    }
+                    mask = mask.shiftLeft(1);
+                }
+            }
+
+            return builder.build();
+        }
+        throw new InvalidModelNumberError();
     }
 
     public void addRelation(int w1, int w2) {
         if (w1 >= numWorlds || w2 >= numWorlds) {
-            numWorlds = Math.max(w1, w2);
-            logger.info("Increasing number of worlds to " + numWorlds + " to account for relation (" + w1 + "," + w2 + ")");
+            numWorlds = Math.max(w1, w2) + 1;
+            logger.debug("Increasing number of worlds to " + numWorlds + " to account for relation (" + w1 + "," + w2 + ")");
         }
 
         if (tentativeAccessMap.containsKey(w1)) {

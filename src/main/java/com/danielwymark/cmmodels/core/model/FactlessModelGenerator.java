@@ -32,23 +32,9 @@ public class FactlessModelGenerator implements Generator<Model> {
                 calculateBitstreamMax();
                 accessibilityBitString = BigInteger.valueOf(0);
             }
-
-            var modelBuilder = new ModelBuilder(numWorlds);
-
-            // Every world W's accessibility relation given by a segment of the bitstream.
-            // Each bit in the segment indicates whether W is related to a particular world.
-            var mask = BigInteger.ONE;
-            for (int i = 0; i < numWorlds; ++i) {
-                for (int j = 0; j < numWorlds; ++j) {
-                    if (mask.and(accessibilityBitString).compareTo(BigInteger.ZERO) != 0) {
-                        modelBuilder.addRelation(i, j);
-                    }
-                    mask = mask.shiftLeft(1);
-                }
-            }
-
+            var model = ModelBuilder.buildFromModelNumber(numWorlds + "w" + accessibilityBitString);
             accessibilityBitString = accessibilityBitString.add(BigInteger.ONE);
-            return modelBuilder.build();
+            return model;
         };
         return Stream.generate(modelSupplier);
     }
