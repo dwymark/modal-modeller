@@ -12,14 +12,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 
-public class ViewModelPage implements Renderable {
-    private final String modelNum;
-    private final String imagesDirectory;
-
-    public ViewModelPage(String modelNum, String imagesDirectory) {
-        this.modelNum = modelNum;
-        this.imagesDirectory = imagesDirectory;
-    }
+public record ViewModelPage(String modelNum, String imagesDirectory) implements Renderable {
 
     @Override
     public void render(Context ctx) {
@@ -29,8 +22,7 @@ public class ViewModelPage implements Renderable {
             Model model;
             try {
                 model = ModelBuilder.buildFromModelNumber(modelNum);
-            }
-            catch (InvalidModelNumberError e) {
+            } catch (InvalidModelNumberError e) {
                 ctx.render("ViewModel.jte", Map.of("modelNum", modelNum, "error", true));
                 return;
             }
