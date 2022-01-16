@@ -1,11 +1,14 @@
 package com.danielwymark.modalmodeller.relations;
 
 import com.danielwymark.modalmodeller.model.World;
-import com.kitfox.svg.A;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 
 public class Partitioner {
+    private final Logger logger = LogManager.getLogger(Partitioner.class);
+
     private final Set<World> universe;
     private List<Block> blocks;
     private final List<PartitionFilter> filters;
@@ -16,9 +19,18 @@ public class Partitioner {
         this.blocks = new ArrayList<>(Collections.singleton(new Block(universe, new ArrayList<>())));
     }
 
+    public void refine() {
+        logger.trace("Beginning refinement. Step 0 = " + blocks);
+        int step = 1;
+        while (refineOneStep()) {
+            logger.trace("Step " + step++ + " = " + blocks);
+        }
+        logger.trace("Completed refinement.");
+    }
+
     // false --> nothing left to refine
     // true --> refined some block
-    public boolean refine() {
+    private boolean refineOneStep() {
         Integer refiningBlockIdx = firstUnrefinedBlockIdx();
         if (refiningBlockIdx == null) {
             return false;

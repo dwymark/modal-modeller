@@ -5,5 +5,5 @@ import com.danielwymark.modalmodeller.model.Model;
 import java.util.List;
 
 public interface BisimulationSolver {
-    List<Relation> findBisimulations(Model model1, Model model2);
+    Relation findLargestBisimulation(Model model1, Model model2);
 }

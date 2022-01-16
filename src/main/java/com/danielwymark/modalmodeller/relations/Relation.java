@@ -11,4 +11,12 @@ public record Relation(Model left,
     // Could write a constructor that will verify that the worlds are in the models as expected, however that will incur
     // an O(n) performance cost to iterate over all the worlds in the map. Since the ultimate goal will be to generate a
     // very large number of these relations, I am refraining from adding this safety feature at this time.
+
+    // TODO: Implement GraphViz visualization for Relation
+
+
+    @Override
+    public String toString() {
+        return "Relation{" + map + '}';
+    }
 }

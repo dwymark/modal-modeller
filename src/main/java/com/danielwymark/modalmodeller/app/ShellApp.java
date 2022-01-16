@@ -3,7 +3,6 @@ package com.danielwymark.modalmodeller.app;
 import com.danielwymark.modalmodeller.model.Model;
 import com.danielwymark.modalmodeller.model.ModelBuilder;
 import com.danielwymark.modalmodeller.model.FactlessModelGenerator;
-import com.danielwymark.modalmodeller.relations.KanellakisSmolkaBisimulationSolver;
 import com.danielwymark.modalmodeller.relations.NaiveBisimulationSolver;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
@@ -67,6 +66,6 @@ public class ShellApp {
         modelBuilder.addRelation(1, 2);
         Model model2 = modelBuilder.build();
 
-        solver.findBisimulations(model1, model2);
+        System.out.println(solver.findLargestBisimulation(model1, model2));
     }
 }

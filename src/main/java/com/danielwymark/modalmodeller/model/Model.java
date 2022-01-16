@@ -24,17 +24,17 @@ public final class Model {
     private final Set<World>[] accessMap;
     private final Set<AtomicFormula>[] valuationMap;
     private final int numWorlds;
-    private final long identifier;
+    private final long id;
     private static final AtomicLong nextModelNum = new AtomicLong(0);
 
     @SuppressWarnings("unchecked") // array of sets
     public Model(int numWorlds, List<Set<Integer>> accessMap, List<Set<String>> valuationMap) {
-        identifier = nextModelNum.getAndIncrement();
+        id = nextModelNum.getAndIncrement();
         this.numWorlds = numWorlds;
 
         worlds = new World[numWorlds];
         for (int i = 0; i < numWorlds; ++i) {
-            worlds[i] = new World(i, identifier);
+            worlds[i] = new World(i, id);
         }
 
 
@@ -59,6 +59,10 @@ public final class Model {
      * Accessors
      */
 
+    public long getId() {
+        return id;
+    }
+
     public List<World> getWorlds() {
         return List.of(worlds);
     }
@@ -80,7 +84,7 @@ public final class Model {
     }
 
     public Set<World> worldsAccessibleFrom(World world) {
-        if (world.identifier() != identifier)
+        if (world.modelId() != id)
             return new HashSet<>();
         return worldsAccessibleFrom(world.index());
     }
@@ -93,7 +97,7 @@ public final class Model {
     }
 
     public Set<AtomicFormula> propositionsTrueAt(World world) {
-        if (world.identifier() != identifier)
+        if (world.modelId() != id)
             return new HashSet<>();
         return propositionsTrueAt(world.index());
     }
@@ -147,19 +151,19 @@ public final class Model {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Model model = (Model) o;
-        return identifier == model.identifier;
+        return id == model.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(identifier);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Model{" +
                 "numWorlds=" + numWorlds +
-                ", id=" + identifier +
+                ", id=" + id +
                 '}';
     }
 }
