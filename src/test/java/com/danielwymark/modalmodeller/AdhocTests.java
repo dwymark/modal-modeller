@@ -1,4 +1,4 @@
-package com.danielwymark.modalmodeller.app;
+package com.danielwymark.modalmodeller;
 
 import com.danielwymark.modalmodeller.model.Model;
 import com.danielwymark.modalmodeller.model.ModelBuilder;
@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ShellApp {
+public class AdhocTests {
     private void testGraphvizSingleModel() {
         final int NUM_WORLDS = 4;
         var modelBuilder = new ModelBuilder(NUM_WORLDS);
