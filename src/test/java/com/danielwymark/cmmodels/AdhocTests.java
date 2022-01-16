@@ -1,9 +1,9 @@
 package com.danielwymark.cmmodels;
 
-import com.danielwymark.cmmodels.model.Model;
-import com.danielwymark.cmmodels.model.ModelBuilder;
-import com.danielwymark.cmmodels.model.FactlessModelGenerator;
-import com.danielwymark.cmmodels.relations.NaiveBisimulationSolver;
+import com.danielwymark.cmmodels.core.model.Model;
+import com.danielwymark.cmmodels.core.model.ModelBuilder;
+import com.danielwymark.cmmodels.core.model.FactlessModelGenerator;
+import com.danielwymark.cmmodels.core.relations.NaiveBisimulationSolver;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 

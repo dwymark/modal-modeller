@@ -1,6 +1,6 @@
-package com.danielwymark.cmmodels.relations;
+package com.danielwymark.cmmodels.core.relations;
 
-import com.danielwymark.cmmodels.model.World;
+import com.danielwymark.cmmodels.core.model.World;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 

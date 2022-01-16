@@ -1,5 +1,7 @@
 package com.danielwymark.cmmodels.syntax;
 
+import com.danielwymark.cmmodels.core.syntax.AtomicFormula;
+import com.danielwymark.cmmodels.core.syntax.Formula;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.danielwymark.cmmodels.syntax;
+package com.danielwymark.cmmodels.core.syntax;
 
 import java.util.Objects;
 

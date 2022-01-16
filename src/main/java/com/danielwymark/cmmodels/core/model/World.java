@@ -1,4 +1,4 @@
-package com.danielwymark.cmmodels.model;
+package com.danielwymark.cmmodels.core.model;
 
 import java.util.Objects;
 

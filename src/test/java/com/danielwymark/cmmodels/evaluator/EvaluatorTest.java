@@ -1,11 +1,11 @@
 package com.danielwymark.cmmodels.evaluator;
 
-import com.danielwymark.cmmodels.evaluation.NaiveEvaluator;
-import com.danielwymark.cmmodels.exceptions.OutOfDomainError;
+import com.danielwymark.cmmodels.core.evaluation.NaiveEvaluator;
+import com.danielwymark.cmmodels.core.exceptions.OutOfDomainError;
 import com.danielwymark.cmmodels.model.ModelTest;
-import com.danielwymark.cmmodels.syntax.AtomicFormula;
-import com.danielwymark.cmmodels.syntax.CompoundFormula;
-import com.danielwymark.cmmodels.syntax.Operator;
+import com.danielwymark.cmmodels.core.syntax.AtomicFormula;
+import com.danielwymark.cmmodels.core.syntax.CompoundFormula;
+import com.danielwymark.cmmodels.core.syntax.Operator;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,7 +1,7 @@
-package com.danielwymark.cmmodels.model;
+package com.danielwymark.cmmodels.core.model;
 
-import com.danielwymark.cmmodels.exceptions.OutOfDomainError;
-import com.danielwymark.cmmodels.syntax.AtomicFormula;
+import com.danielwymark.cmmodels.core.exceptions.OutOfDomainError;
+import com.danielwymark.cmmodels.core.syntax.AtomicFormula;
 import guru.nidi.graphviz.attribute.Font;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;

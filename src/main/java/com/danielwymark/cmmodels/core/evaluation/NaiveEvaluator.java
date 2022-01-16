@@ -1,11 +1,11 @@
-package com.danielwymark.cmmodels.evaluation;
+package com.danielwymark.cmmodels.core.evaluation;
 
-import com.danielwymark.cmmodels.exceptions.OutOfDomainError;
-import com.danielwymark.cmmodels.model.Model;
-import com.danielwymark.cmmodels.model.World;
-import com.danielwymark.cmmodels.syntax.CompoundFormula;
-import com.danielwymark.cmmodels.syntax.Formula;
-import com.danielwymark.cmmodels.syntax.AtomicFormula;
+import com.danielwymark.cmmodels.core.exceptions.OutOfDomainError;
+import com.danielwymark.cmmodels.core.model.Model;
+import com.danielwymark.cmmodels.core.model.World;
+import com.danielwymark.cmmodels.core.syntax.AtomicFormula;
+import com.danielwymark.cmmodels.core.syntax.CompoundFormula;
+import com.danielwymark.cmmodels.core.syntax.Formula;
 
 public class NaiveEvaluator implements Evaluator {
     @Override

@@ -1,4 +1,4 @@
-package com.danielwymark.cmmodels.model;
+package com.danielwymark.cmmodels.core.model;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

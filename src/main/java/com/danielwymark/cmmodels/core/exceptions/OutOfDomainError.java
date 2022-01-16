@@ -1,4 +1,4 @@
-package com.danielwymark.cmmodels.exceptions;
+package com.danielwymark.cmmodels.core.exceptions;
 
 public class OutOfDomainError extends RuntimeException {
     public OutOfDomainError(String errorMessage) {

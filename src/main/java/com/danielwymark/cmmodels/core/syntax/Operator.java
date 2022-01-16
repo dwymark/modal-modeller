@@ -1,4 +1,4 @@
-package com.danielwymark.cmmodels.syntax;
+package com.danielwymark.cmmodels.core.syntax;
 
 public enum Operator {
     NONE,
