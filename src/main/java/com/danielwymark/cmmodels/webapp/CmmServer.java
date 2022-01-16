@@ -1,17 +1,30 @@
 package com.danielwymark.cmmodels.webapp;
 
+import com.danielwymark.cmmodels.webapp.pages.ViewModelPage;
 import io.javalin.Javalin;
+import io.javalin.http.staticfiles.Location;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+
+import java.io.File;
 
 public class CmmServer {
     private static final Logger logger = LogManager.getLogger(CmmServer.class);
     private static int portNum = 8080;
+    private static String imagesDirectory = System.getProperty("user.dir");
 
     public static void main(String[] args) {
         parseArgs(args);
-        Javalin javalin = Javalin.create().start(portNum);
-        // TODO: Fill in details
+        Javalin app = Javalin.create(config -> config.addStaticFiles(staticFiles -> {
+            staticFiles.hostedPath = "/images";
+            staticFiles.directory = imagesDirectory;
+            staticFiles.location = Location.EXTERNAL;
+        })).start(portNum);
+
+        app.get("/view-model/{modelNum}", ctx -> {
+            var page = new ViewModelPage(ctx.pathParam("modelNum"), imagesDirectory);
+            page.render(ctx);
+        });
     }
 
     private static void parseArgs(String[] args) {
@@ -30,6 +43,10 @@ public class CmmServer {
                         currentParamName = "port";
                         requiredArguments = 1;
                     }
+                    case "-d", "--images-directory" -> {
+                        currentParamName = "images-directory";
+                        requiredArguments = 1;
+                    }
                     default -> {
                         logger.error("Unrecognized parameter name: \"" + arg + "\"");
                         System.exit(1);
@@ -43,20 +60,26 @@ public class CmmServer {
                         "you forgot to list a parameter name before your first argument.");
                 System.exit(1);
             }
-            //noinspection SwitchStatementWithTooFewBranches
             switch (currentParamName) {
-                //noinspection ConstantConditions
                 case "port" -> {
                     try {
                         portNum = Integer.parseInt(arg);
                         logger.info("Set port number for CmmServer to " + portNum);
                     }
                     catch (NumberFormatException e) {
-                        logger.error("\"" + arg + " could not be parsed as a port number.");
+                        logger.error("\"" + arg + "\" could not be parsed as a port number.");
                         System.exit(1);
                     }
                 }
+                case "images-directory" -> {
+                    if (!new File(arg).isDirectory()) {
+                        logger.error("\"" + arg + "\" is not a valid directory.");
+                        System.exit(1);
+                    }
+                    imagesDirectory = arg;
+                }
             }
+            requiredArguments--;
         }
     }
 }
