@@ -52,13 +52,19 @@ public class Partitioner {
                 else {
                     var refinedWorlds = new HashSet<>(Collections.singleton(world));
                     var refinedFilterList = new ArrayList<>(refiningBlock.refinedBy());
-                    refinedFilterList.add(filter);
                     refinedBlocks.put(filteredBlocks, new Block(refinedWorlds, refinedFilterList));
                 }
             }
 
-            newBlocks.remove(refiningBlockIdx.intValue());
-            newBlocks.addAll(refinedBlocks.values());
+            if (refinedBlocks.size() == 1) {
+                assert (newBlocks.get(refiningBlockIdx) == refinedBlocks.values().stream().findFirst().get());
+                newBlocks.get(refiningBlockIdx).refinedBy().add(filter);
+            }
+            else {
+                newBlocks.remove(refiningBlockIdx.intValue());
+                newBlocks.addAll(refinedBlocks.values());
+            }
+            blocks = newBlocks;
             return true;
         }
         return false;
