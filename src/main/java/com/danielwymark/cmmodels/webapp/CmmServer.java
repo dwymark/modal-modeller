@@ -24,10 +24,15 @@ public class CmmServer {
             staticFiles.location = Location.EXTERNAL;
         })).start(portNum);
 
+        // ViewModelPage
+        //--------------------------------------------------------------------------------------------------------------
         app.get("/view-model/{modelNum}", ctx -> {
             var page = new ViewModelPage(ctx.pathParam("modelNum"), imagesDirectory);
             page.render(ctx);
         });
+
+        // CreateModelPage
+        //--------------------------------------------------------------------------------------------------------------
         app.get("/create-model/{modelNum}", ctx -> {
             var page = new CreateModelPage(ctx.pathParam("modelNum"));
             page.render(ctx);
@@ -70,6 +75,9 @@ public class CmmServer {
             var page = new CreateModelPage(ctx.pathParam("modelNum"), Map.of(sourceWorld, targetWorld));
             page.render(ctx);
         });
+
+        // BisimulationTesterPage
+        //--------------------------------------------------------------------------------------------------------------
         app.get("/bisimulation-tester", ctx -> {
             var page = new BisimulationTesterPage();
             page.render(ctx);
