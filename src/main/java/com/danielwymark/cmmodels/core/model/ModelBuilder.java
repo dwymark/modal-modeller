@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Convenience class to ease the process of building a model.
@@ -21,6 +22,34 @@ public class ModelBuilder {
     private final HashMap<Integer, Set<Integer>> tentativeAccessMap;
     private final HashMap<Integer, Set<String>> tentativeValuationMap;
 
+    public ModelBuilder(String modelNum) {
+        tentativeAccessMap = new HashMap<>();
+        tentativeValuationMap = new HashMap<>();
+
+        Pattern r = Pattern.compile("(\\d+)w(\\d+)");
+        Matcher m = r.matcher(modelNum);
+        if (m.matches() && m.groupCount() == 2) {
+            numWorlds = Integer.parseInt(m.group(1));
+            var accessibilityRelation = new BigInteger(m.group(2));
+
+            // Every world W's accessibility relation given by a segment of a bitstream.
+            // Each bit in the segment indicates whether W is related to a particular world.
+
+            var mask = BigInteger.ONE;
+            for (int i = 0; i < numWorlds; ++i) {
+                for (int j = 0; j < numWorlds; ++j) {
+                    var masked = mask.and(accessibilityRelation);
+                    if (masked.compareTo(BigInteger.ZERO) != 0) {
+                        addRelation(i, j);
+                    }
+                    mask = mask.shiftLeft(1);
+                }
+            }
+            return;
+        }
+        throw new InvalidModelNumberError();
+    }
+
     public ModelBuilder(int numWorlds) {
         this.numWorlds = numWorlds;
         tentativeAccessMap = new HashMap<>();
@@ -32,30 +61,32 @@ public class ModelBuilder {
     }
 
     public static Model buildFromModelNumber(String modelNum) {
-        Pattern r = Pattern.compile("(\\d+)w(\\d+)");
-        Matcher m = r.matcher(modelNum);
-        if (m.matches() && m.groupCount() == 2) {
-            var numWorlds = Integer.parseInt(m.group(1));
-            var accessibilityRelation = new BigInteger(m.group(2));
-            var builder = new ModelBuilder(numWorlds);
+        var modelBuilder = new ModelBuilder(modelNum);
+        return modelBuilder.build();
+    }
 
-            // Every world W's accessibility relation given by a segment of a bitstream.
-            // Each bit in the segment indicates whether W is related to a particular world.
+    public int getNumWorlds() {
+        return numWorlds;
+    }
 
-            var mask = BigInteger.ONE;
-            for (int i = 0; i < numWorlds; ++i) {
-                for (int j = 0; j < numWorlds; ++j) {
-                    var masked = mask.and(accessibilityRelation);
-                    if (masked.compareTo(BigInteger.ZERO) != 0) {
-                        builder.addRelation(i, j);
-                    }
-                    mask = mask.shiftLeft(1);
-                }
+    public void setNumWorlds(int numWorlds) {
+        this.numWorlds = numWorlds;
+        for (var world : tentativeAccessMap.keySet()) {
+            if (world >= numWorlds) {
+                tentativeAccessMap.remove(world);
             }
-
-            return builder.build();
+            else {
+                tentativeAccessMap.put(world,
+                        new HashSet<>(tentativeAccessMap.get(world).stream()
+                                .filter(x-> x < numWorlds)
+                                .collect(Collectors.toSet())));
+            }
         }
-        throw new InvalidModelNumberError();
+        for (var world : tentativeValuationMap.keySet()) {
+            if (world >= numWorlds) {
+                tentativeValuationMap.remove(world);
+            }
+        }
     }
 
     public void addRelation(int w1, int w2) {
@@ -68,6 +99,19 @@ public class ModelBuilder {
             tentativeAccessMap.get(w1).add(w2);
         } else {
             tentativeAccessMap.put(w1, new HashSet<>(Set.of(w2)));
+        }
+    }
+
+    public void toggleRelation(int w1, int w2) {
+        if (!tentativeAccessMap.containsKey(w1)) {
+            tentativeAccessMap.put(w1, new HashSet<>(Set.of(w2)));
+            return;
+        }
+        if (tentativeAccessMap.get(w1).contains(w2)) {
+            tentativeAccessMap.get(w1).remove(w2);
+        }
+        else {
+            addRelation(w1, w2);
         }
     }
 

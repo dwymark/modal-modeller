@@ -1,5 +1,7 @@
 package com.danielwymark.cmmodels.webapp;
 
+import com.danielwymark.cmmodels.webapp.pages.BisimulationTesterPage;
+import com.danielwymark.cmmodels.webapp.pages.CreateModelPage;
 import com.danielwymark.cmmodels.webapp.pages.ViewModelPage;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
@@ -25,6 +27,25 @@ public class CmmServer {
             var page = new ViewModelPage(ctx.pathParam("modelNum"), imagesDirectory);
             page.render(ctx);
         });
+        app.get("/create-model/{modelNum}", ctx -> {
+            var page = new CreateModelPage(ctx.pathParam("modelNum"));
+            page.render(ctx);
+        });
+        app.get("/create-model/{modelNum}/add{numWorldsToAdd}", ctx -> {
+            int numWorldsToAdd = Integer.parseInt(ctx.pathParam("numWorldsToAdd"));
+            var page = new CreateModelPage(ctx.pathParam("modelNum"), numWorldsToAdd);
+            page.render(ctx);
+        });
+//        app.get("/create-model/{modelNum}/{source}->{target}", ctx -> {
+//            int numWorldsToAdd = Integer.parseInt(ctx.pathParam("numWorldsToAdd"));
+//            var page = new CreateModelPage(ctx.pathParam("modelNum"), numWorldsToAdd);
+//            page.render(ctx);
+//        });
+        app.get("/bisimulation-tester", ctx -> {
+            var page = new BisimulationTesterPage();
+            page.render(ctx);
+        });
+
     }
 
     private static void parseArgs(String[] args) {

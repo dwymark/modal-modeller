@@ -29,15 +29,15 @@ public class ModelBuilderTest {
 
         model = ModelBuilder.buildFromModelNumber("3w150"); // 010 010 110
         Assert.assertEquals(model.getNumWorlds(), 3);
-        Assert.assertFalse(model.worldsAccessibleFrom(0).contains(model.getWorld(0)));
-        Assert.assertTrue (model.worldsAccessibleFrom(0).contains(model.getWorld(1)));
-        Assert.assertTrue (model.worldsAccessibleFrom(0).contains(model.getWorld(2)));
-        Assert.assertFalse(model.worldsAccessibleFrom(1).contains(model.getWorld(0)));
-        Assert.assertTrue (model.worldsAccessibleFrom(1).contains(model.getWorld(1)));
-        Assert.assertFalse(model.worldsAccessibleFrom(1).contains(model.getWorld(2)));
-        Assert.assertFalse(model.worldsAccessibleFrom(2).contains(model.getWorld(0)));
-        Assert.assertTrue (model.worldsAccessibleFrom(2).contains(model.getWorld(1)));
-        Assert.assertFalse(model.worldsAccessibleFrom(2).contains(model.getWorld(2)));
+        Assert.assertFalse(model.accessible(0,0));
+        Assert.assertTrue (model.accessible(0,1));
+        Assert.assertTrue (model.accessible(0,2));
+        Assert.assertFalse(model.accessible(1,0));
+        Assert.assertTrue (model.accessible(1,1));
+        Assert.assertFalse(model.accessible(1,2));
+        Assert.assertFalse(model.accessible(2,0));
+        Assert.assertTrue (model.accessible(2,1));
+        Assert.assertFalse(model.accessible(2,2));
     }
 
 }

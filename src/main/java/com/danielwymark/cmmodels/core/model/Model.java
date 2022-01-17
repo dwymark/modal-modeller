@@ -7,6 +7,7 @@ import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 
+import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -55,6 +56,20 @@ public final class Model {
         }
     }
 
+    public String modelNumber() {
+        var accessibilityRelation = BigInteger.ZERO;
+        var mask = BigInteger.ONE;
+        for (int i = 0; i < numWorlds; ++i) {
+            for (int j = 0; j < numWorlds; ++j) {
+                if (accessible(i,j)) {
+                    accessibilityRelation = accessibilityRelation.or(mask);
+                }
+                mask = mask.shiftLeft(1);
+            }
+        }
+        return numWorlds + "w" + accessibilityRelation;
+    }
+
     /*::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
      * Accessors
      */
@@ -87,6 +102,14 @@ public final class Model {
         if (world.modelId() != id)
             return new HashSet<>();
         return worldsAccessibleFrom(world.index());
+    }
+
+    public boolean accessible(World sourceWorld, World targetWorld) {
+        return worldsAccessibleFrom(sourceWorld).contains(targetWorld);
+    }
+
+    public boolean accessible(int sourceWorld, int targetWorld) {
+        return worldsAccessibleFrom(sourceWorld).contains(getWorld(targetWorld));
     }
 
     //--
