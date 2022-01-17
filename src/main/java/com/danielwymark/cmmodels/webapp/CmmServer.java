@@ -9,6 +9,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.util.Map;
 
 public class CmmServer {
     private static final Logger logger = LogManager.getLogger(CmmServer.class);
@@ -31,16 +32,44 @@ public class CmmServer {
             var page = new CreateModelPage(ctx.pathParam("modelNum"));
             page.render(ctx);
         });
-        app.get("/create-model/{modelNum}/add{numWorldsToAdd}", ctx -> {
-            int numWorldsToAdd = Integer.parseInt(ctx.pathParam("numWorldsToAdd"));
+        app.post("/create-model", ctx -> {
+            var page = new CreateModelPage(ctx.formParam("modelNum"));
+            page.render(ctx);
+        });
+        app.get("/create-model/{modelNum}/add/{numWorldsToAdd}", ctx -> {
+            int numWorldsToAdd;
+            try {
+                numWorldsToAdd = Integer.parseInt(ctx.pathParam("numWorldsToAdd"));
+            }
+            catch (NumberFormatException e) {
+                ctx.status(400);
+                return;
+            }
+
             var page = new CreateModelPage(ctx.pathParam("modelNum"), numWorldsToAdd);
             page.render(ctx);
         });
-//        app.get("/create-model/{modelNum}/{source}->{target}", ctx -> {
-//            int numWorldsToAdd = Integer.parseInt(ctx.pathParam("numWorldsToAdd"));
-//            var page = new CreateModelPage(ctx.pathParam("modelNum"), numWorldsToAdd);
-//            page.render(ctx);
-//        });
+        app.post("/create-model/{modelNum}/toggle", ctx -> {
+            String sourceParam = ctx.formParam("sourceWorld");
+            String targetParam = ctx.formParam("targetWorld");
+            if (sourceParam == null || targetParam == null) {
+                ctx.status(400);
+                return;
+            }
+
+            int sourceWorld, targetWorld;
+            try {
+                sourceWorld = Integer.parseInt(sourceParam);
+                targetWorld = Integer.parseInt(targetParam);
+            }
+            catch (NumberFormatException e) {
+                ctx.status(400);
+                return;
+            }
+
+            var page = new CreateModelPage(ctx.pathParam("modelNum"), Map.of(sourceWorld, targetWorld));
+            page.render(ctx);
+        });
         app.get("/bisimulation-tester", ctx -> {
             var page = new BisimulationTesterPage();
             page.render(ctx);
