@@ -5,8 +5,8 @@ import com.danielwymark.cmmodels.webapp.pages.CreateModelPage;
 import com.danielwymark.cmmodels.webapp.pages.ViewModelPage;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.Map;
@@ -112,6 +112,7 @@ public class CmmServer {
                 }
                 continue;
             }
+
             assert (!isParamName);
             if (currentParamName == null) {
                 logger.error("Parsing error. You may have provided too many arguments for a parameter, or perhaps " +

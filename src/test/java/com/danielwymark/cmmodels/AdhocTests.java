@@ -4,8 +4,10 @@ import com.danielwymark.cmmodels.core.model.Model;
 import com.danielwymark.cmmodels.core.model.ModelBuilder;
 import com.danielwymark.cmmodels.core.model.FactlessModelGenerator;
 import com.danielwymark.cmmodels.core.relations.NaiveBisimulationSolver;
+import com.danielwymark.cmmodels.core.relations.Relation;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.model.Graph;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,6 +70,24 @@ public class AdhocTests {
     }
 
     public static void main(String[] args) {
-        generateFactlessModels();
+        var modelBuilder = new ModelBuilder();
+        modelBuilder.addRelation(0, 1);
+        modelBuilder.addRelation(0, 2);
+        modelBuilder.addRelation(2, 3);
+        Model model1 = modelBuilder.build();
+
+        modelBuilder = new ModelBuilder();
+        modelBuilder.addRelation(0, 1);
+        modelBuilder.addRelation(0, 2);
+        modelBuilder.addRelation(1, 2);
+        Model model2 = modelBuilder.build();
+
+        Relation bisim = new NaiveBisimulationSolver().findLargestBisimulation(model1, model2);
+        try {
+            Graphviz.fromGraph(bisim.generateGraph())
+                    .height(600).render(Format.PNG).toFile(new File("test.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
