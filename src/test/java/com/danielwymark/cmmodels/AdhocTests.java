@@ -82,9 +82,9 @@ public class AdhocTests {
         modelBuilder.addRelation(1, 2);
         Model model2 = modelBuilder.build();
 
-        Relation bisim = new NaiveBisimulationSolver().findLargestBisimulation(model1, model2);
+        Relation bisimulation = new NaiveBisimulationSolver().findLargestBisimulation(model1, model2);
         try {
-            Graphviz.fromGraph(bisim.generateGraph())
+            Graphviz.fromGraph(bisimulation.generateGraph())
                     .height(600).render(Format.PNG).toFile(new File("test.png"));
         } catch (IOException e) {
             e.printStackTrace();

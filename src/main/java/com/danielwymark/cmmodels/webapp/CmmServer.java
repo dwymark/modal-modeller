@@ -2,6 +2,7 @@ package com.danielwymark.cmmodels.webapp;
 
 import com.danielwymark.cmmodels.webapp.pages.BisimulationTesterPage;
 import com.danielwymark.cmmodels.webapp.pages.CreateModelPage;
+import com.danielwymark.cmmodels.webapp.pages.ViewBisimulationPage;
 import com.danielwymark.cmmodels.webapp.pages.ViewModelPage;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
@@ -31,6 +32,15 @@ public class CmmServer {
             page.render(ctx);
         });
 
+        // ViewModelPage
+        //--------------------------------------------------------------------------------------------------------------
+        app.get("/view-bisimulation/{leftModelNum}/{rightModelNum}", ctx -> {
+            String leftModelNum = ctx.pathParam("leftModelNum");
+            String rightModelNum = ctx.pathParam("rightModelNum");
+            var page = new ViewBisimulationPage(leftModelNum, rightModelNum, imagesDirectory);
+            page.render(ctx);
+        });
+
         // CreateModelPage
         //--------------------------------------------------------------------------------------------------------------
         app.get("/create-model/{modelNum}", ctx -> {
@@ -45,8 +55,7 @@ public class CmmServer {
             int numWorldsToAdd;
             try {
                 numWorldsToAdd = Integer.parseInt(ctx.pathParam("numWorldsToAdd"));
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 ctx.status(400);
                 return;
             }
@@ -66,8 +75,7 @@ public class CmmServer {
             try {
                 sourceWorld = Integer.parseInt(sourceParam);
                 targetWorld = Integer.parseInt(targetParam);
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 ctx.status(400);
                 return;
             }
@@ -124,8 +132,7 @@ public class CmmServer {
                     try {
                         portNum = Integer.parseInt(arg);
                         logger.info("Set port number for CmmServer to " + portNum);
-                    }
-                    catch (NumberFormatException e) {
+                    } catch (NumberFormatException e) {
                         logger.error("\"" + arg + "\" could not be parsed as a port number.");
                         System.exit(1);
                     }

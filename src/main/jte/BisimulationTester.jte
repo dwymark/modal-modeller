@@ -6,10 +6,21 @@
 <script src="https://unpkg.com/htmx.org@1.6.1"></script>
 <body>
     <div class="ba b--dotted bg-washed-blue bw1 sans-serif mw5 mw8-ns center pa2 mt1 flex">
-        <div hx-get="/create-model/3w123" hx-swap="outerHTML"
-             hx-target="this" hx-trigger="load" ></div>
-        <div hx-get="/create-model/3w151" hx-swap="outerHTML"
-             hx-target="this" hx-trigger="load" ></div>
+        <div class="flex flex-column w-100">
+            <div class="pa2 tc">
+                <div hx-get="/view-bisimulation/4w2054/3w38" hx-swap="outerHTML"
+                     hx-target="this" hx-trigger="load" ></div>
+            </div>
+
+            <div class="flex">
+                <div hx-get="/create-model/4w2054" hx-swap="outerHTML"
+                     hx-target="this" hx-trigger="load" ></div>
+                <div hx-get="/create-model/3w38" hx-swap="outerHTML"
+                     hx-target="this" hx-trigger="load" ></div>
+            </div>
+
+        </div>
+
     </div>
 </body>
 </html>
