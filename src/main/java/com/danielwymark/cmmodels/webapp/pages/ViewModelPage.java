@@ -23,7 +23,7 @@ public record ViewModelPage(String modelNum, String imagesDirectory) implements 
             try {
                 model = ModelBuilder.buildFromModelNumber(modelNum);
             } catch (InvalidModelNumberError e) {
-                ctx.render("ViewModel.jte", Map.of("modelNum", modelNum, "error", true));
+                ctx.status(400);
                 return;
             }
 
@@ -31,12 +31,11 @@ public record ViewModelPage(String modelNum, String imagesDirectory) implements 
             try {
                 Graphviz.fromGraph(graph).render(Format.SVG).toFile(outputFile);
             } catch (IOException e) {
-                e.printStackTrace();
-                ctx.render("ViewModel.jte", Map.of("modelNum", modelNum, "error", true));
+                ctx.status(400);
                 return;
             }
         }
-        ctx.render("ViewModel.jte", Map.of("modelNum", modelNum, "error", false));
+        ctx.render("ViewModel.jte", Map.of("modelNum", modelNum));
     }
 
 }

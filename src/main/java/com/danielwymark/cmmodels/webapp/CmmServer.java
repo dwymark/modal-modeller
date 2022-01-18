@@ -41,6 +41,13 @@ public class CmmServer {
             page.render(ctx);
         });
 
+        app.post("/view-bisimulation", ctx -> {
+            String leftModelNum = ctx.formParam("leftModelNum");
+            String rightModelNum = ctx.formParam("rightModelNum");
+            var page = new ViewBisimulationPage(leftModelNum, rightModelNum, imagesDirectory);
+            page.render(ctx);
+        });
+
         // CreateModelPage
         //--------------------------------------------------------------------------------------------------------------
         app.get("/create-model/{modelNum}", ctx -> {
