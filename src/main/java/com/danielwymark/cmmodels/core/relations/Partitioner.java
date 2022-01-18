@@ -20,12 +20,12 @@ public class Partitioner {
     }
 
     public void refine() {
-        logger.trace("Beginning refinement. Step 0 = " + blocks);
+        System.out.println("Beginning refinement. Step 0 = " + blocks);
         int step = 1;
         while (refineOneStep()) {
-            logger.trace("Step " + step++ + " = " + blocks);
+            System.out.println("Step " + step++ + " = " + blocks);
         }
-        logger.trace("Completed refinement.");
+        System.out.println("Completed refinement.");
     }
 
     // false --> nothing left to refine
