@@ -32,7 +32,7 @@ public class CmmServer {
             page.render(ctx);
         });
 
-        // ViewModelPage
+        // ViewBisimulationPage
         //--------------------------------------------------------------------------------------------------------------
         app.get("/view-bisimulation/{leftModelNum}/{rightModelNum}", ctx -> {
             String leftModelNum = ctx.pathParam("leftModelNum");
