@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class NaiveBisimulationSolver implements BisimulationSolver {
-    private Logger logger = LogManager.getLogger(NaiveBisimulationSolver.class);
+    private final Logger logger = LogManager.getLogger(NaiveBisimulationSolver.class);
 
     @Override
     public Relation findLargestBisimulation(Model model1, Model model2) {
@@ -24,7 +24,7 @@ public class NaiveBisimulationSolver implements BisimulationSolver {
                             model1.worldsAccessibleFrom(w).stream(),
                             model2.worldsAccessibleFrom(w).stream())
                     .collect(Collectors.toSet());
-            System.out.println("    " + w + " -> " + s);
+            logger.trace("    " + w + " -> " + s);
             return s;
         });
 

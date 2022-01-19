@@ -28,7 +28,7 @@ public record Relation(Model left,
         for (var entry : map.entrySet()) {
             World source = entry.getKey();
             World target = entry.getValue();
-            if (left.getWorld(source.index()) == source) {
+            if (left.contains(source)) {
                 g = g.with(node(source.toString()).link(to(node(target.toString())).with(Style.DOTTED)));
             }
         }

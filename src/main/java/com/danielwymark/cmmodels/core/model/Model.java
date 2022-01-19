@@ -91,6 +91,11 @@ public final class Model {
         return numWorlds;
     }
 
+    public boolean contains(World world) {
+        int i = world.index();
+        return i < numWorlds && worlds[i] == world;
+    }
+
     //--
 
     public Set<World> worldsAccessibleFrom(int world) {

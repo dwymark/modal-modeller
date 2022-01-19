@@ -20,12 +20,12 @@ public class Partitioner {
     }
 
     public void refine() {
-        System.out.println("Beginning refinement. Step 0 = " + blocks);
+        logger.trace("Beginning refinement. Step 0 = " + blocks);
         int step = 1;
         while (refineOneStep()) {
-            System.out.println("Step " + step++ + " = " + blocks);
+            logger.trace("Step " + step++ + " = " + blocks);
         }
-        System.out.println("Completed refinement.");
+        logger.trace("Completed refinement.");
     }
 
     // false --> nothing left to refine
@@ -42,10 +42,10 @@ public class Partitioner {
             if (refiningBlock.refinedBy().contains(filter))
                 continue;
 
-            Map<List<Integer>, Block> refinedBlocks = new HashMap<>();
+            Map<Set<Integer>, Block> refinedBlocks = new HashMap<>();
             for (var world : refiningBlock.worlds()) {
                 Set<World> filteredWorlds = filter.filter(world);
-                List<Integer> filteredBlocks = new ArrayList<>();
+                Set<Integer> filteredBlocks = new HashSet<>();
 
                 // Map each filtered world to the idx of the block containing it
                 for (var filteredWorld : filteredWorlds) {
