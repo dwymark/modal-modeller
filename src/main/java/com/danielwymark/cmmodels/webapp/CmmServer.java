@@ -4,21 +4,33 @@ import com.danielwymark.cmmodels.webapp.pages.BisimulationTesterPage;
 import com.danielwymark.cmmodels.webapp.pages.CreateModelPage;
 import com.danielwymark.cmmodels.webapp.pages.ViewBisimulationPage;
 import com.danielwymark.cmmodels.webapp.pages.ViewModelPage;
+import gg.jte.ContentType;
+import gg.jte.TemplateEngine;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
+import io.javalin.plugin.rendering.template.JavalinJte;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 
 public class CmmServer {
     private static final Logger logger = LogManager.getLogger(CmmServer.class);
     private static int portNum = 8080;
     private static String imagesDirectory = System.getProperty("user.dir");
+    private static String precompiledTemplatesPath;
 
     public static void main(String[] args) {
         parseArgs(args);
+
+        if (precompiledTemplatesPath != null) {
+            Path targetDirectory = Path.of(precompiledTemplatesPath);
+            TemplateEngine templateEngine = TemplateEngine.createPrecompiled(targetDirectory, ContentType.Html);
+            JavalinJte.configure(templateEngine);
+        }
+
         Javalin app = Javalin.create(config -> config.addStaticFiles(staticFiles -> {
             staticFiles.hostedPath = "/images";
             staticFiles.directory = imagesDirectory;
@@ -120,6 +132,10 @@ public class CmmServer {
                         currentParamName = "images-directory";
                         requiredArguments = 1;
                     }
+                    case "-jte", "--precompiled-jte-directory" -> {
+                        currentParamName = "precompiled-jte-directory";
+                        requiredArguments = 1;
+                    }
                     default -> {
                         logger.error("Unrecognized parameter name: \"" + arg + "\"");
                         System.exit(1);
@@ -150,6 +166,13 @@ public class CmmServer {
                         System.exit(1);
                     }
                     imagesDirectory = arg;
+                }
+                case "precompiled-jte-directory" -> {
+                    if (!new File(arg).isDirectory()) {
+                        logger.error("\"" + arg + "\" is not a valid directory.");
+                        System.exit(1);
+                    }
+                    precompiledTemplatesPath = arg;
                 }
             }
             requiredArguments--;
