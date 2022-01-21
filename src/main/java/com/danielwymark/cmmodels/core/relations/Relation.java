@@ -6,8 +6,10 @@ import guru.nidi.graphviz.attribute.Style;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.MutableGraph;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import static guru.nidi.graphviz.model.Factory.*;
 
@@ -18,17 +20,19 @@ public record Relation(Model left,
     // an O(n) performance cost to iterate over all the worlds in the map. Since the ultimate goal will be to generate a
     // very large number of these relations, I am refraining from adding this safety feature at this time.
 
-    // note: currently assumes the relation is symmetric
     public Graph generateGraph() {
         Graph g = graph();
         Graph leftG = left.generateGraph().cluster();
         Graph rightG = right.generateGraph().cluster();
         g = g.with(leftG, rightG);
 
+        Set<Set<World>> seen = new HashSet<>();
         for (var entry : map.entrySet()) {
             World source = entry.getKey();
             World target = entry.getValue();
-            if (left.contains(source)) {
+            var pair = new HashSet<>(Set.of(source, target));
+            if (!seen.contains(pair)) {
+                seen.add(pair);
                 g = g.with(node(source.toString()).link(to(node(target.toString())).with(Style.DOTTED)));
             }
         }
