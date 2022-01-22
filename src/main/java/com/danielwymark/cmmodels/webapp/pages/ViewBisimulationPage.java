@@ -46,9 +46,16 @@ public record ViewBisimulationPage(String leftModelNum, String rightModelNum, St
         }
 
         List<Block> partitioning = solver.findCoarsestPartitioning(leftModel, rightModel);
+        String partitioningString = partitioning.toString()
+                .replace(leftModel.getId() + "-W", "L")
+                .replace(rightModel.getId() + "-W", "R")
+                .replace("[", " { ")
+                .replace("]", " } ")
+                .strip();
+
         ctx.render("ViewBisimulation.jte", Map.of(
                 "leftModelNum", leftModelNum,
                 "rightModelNum", rightModelNum,
-                "partitioning", partitioning.toString()));
+                "partitioning", partitioningString));
     }
 }

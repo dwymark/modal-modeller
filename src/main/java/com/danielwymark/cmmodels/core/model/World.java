@@ -16,7 +16,7 @@ public record World(int index, long modelId) {
 
     @Override
     public String toString() {
-        return "W(" + index + ")-" + modelId;
+        return modelId + "-W(" + index + ")";
     }
 
     @Override

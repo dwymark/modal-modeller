@@ -23,7 +23,7 @@
                      hx-target="this" hx-trigger="load" ></div>
             </div>
             <div class="pa2 tc">
-                <div id="bisimulation" hx-target="this" hx-trigger="load delay:200ms, change from:document delay:1s, click from:document delay:1s" hx-vals="js:{leftModelNum: extractModelNumber(0), rightModelNum: extractModelNumber(1)}"
+                <div id="bisimulation" hx-target="this" hx-trigger="load delay:1s, change from:document delay:1s, click from:document delay:1s" hx-vals="js:{leftModelNum: extractModelNumber(0), rightModelNum: extractModelNumber(1)}"
                      hx-post="/view-bisimulation" hx-swap="innerHTML"></div>
             </div>
         </div>
