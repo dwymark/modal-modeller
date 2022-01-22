@@ -12,9 +12,7 @@ import java.util.stream.Stream;
 public class NaiveBisimulationSolver implements BisimulationSolver {
     private final Logger logger = LogManager.getLogger(NaiveBisimulationSolver.class);
 
-    @Override
-    public Relation findLargestBisimulation(Model model1, Model model2) {
-        System.out.println("Searching for bisimulation between " + model1 + " and " + model2);
+    public List<Block> findCoarsestPartitioning(Model model1, Model model2) {
         Set<World> universe = Stream.concat(model1.getWorlds().stream(), model2.getWorlds().stream())
                 .collect(Collectors.toSet());
         List<PartitionFilter> filters = new ArrayList<>();
@@ -31,7 +29,14 @@ public class NaiveBisimulationSolver implements BisimulationSolver {
         // Find the coarsest stable partitioning using the parameters above
         var partitioner = new Partitioner(universe, filters);
         partitioner.refine();
-        List<Block> partitioning = partitioner.getBlocks();
+        return partitioner.getBlocks();
+    }
+
+    @Override
+    public Relation findLargestBisimulation(Model model1, Model model2) {
+        System.out.println("Searching for bisimulation between " + model1 + " and " + model2);
+
+        List<Block> partitioning = findCoarsestPartitioning(model1, model2);
 
         // Construct relation from resulting partitioning
         Map<World, World> mapping = new HashMap<>();
@@ -41,6 +46,7 @@ public class NaiveBisimulationSolver implements BisimulationSolver {
                 for (var world2 : worlds) {
                     if (world1.modelId() != world2.modelId()) {
                         mapping.put(world1, world2);
+                        mapping.put(world2, world1);
                     }
                 }
             }
