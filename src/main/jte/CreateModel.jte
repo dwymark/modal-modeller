@@ -10,13 +10,13 @@
     </div>
     <div class="pt1 flex">
         <div class="w-third">
-            <button class="pa2 w-third" hx-get="/create-model/${modelNum}/add/-1" hx-trigger="click">
+            <button class="pa2 w2" hx-get="/create-model/${modelNum}/add/-1" hx-trigger="click">
                 -
             </button>
         </div>
         <div class="w-third pa2 f4">${numWorlds}</div>
         <div class="w-third">
-            <button class="pa2 w-third" hx-get="/create-model/${modelNum}/add/1" hx-trigger="click">
+            <button class="pa2 w2" hx-get="/create-model/${modelNum}/add/1" hx-trigger="click">
                 +
             </button>
         </div>

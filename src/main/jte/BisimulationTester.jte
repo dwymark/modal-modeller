@@ -14,7 +14,7 @@
     }
 </script>
 <body class="bg-dark-gray">
-    <div class="ba b--dotted bg-blue bw1 sans-serif mw5 mw8-ns center pa2 mt1 flex">
+    <div class="ba b--dotted bg-blue bw1 sans-serif mw8-ns center pa2 mt1 flex">
         <div class="flex flex-column w-100">
             <div class="flex">
                 <div hx-get="/create-model/4w2054" hx-swap="outerHTML"
