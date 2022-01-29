@@ -6,6 +6,8 @@ import com.danielwymark.cmmodels.webapp.pages.ViewBisimulationPage;
 import com.danielwymark.cmmodels.webapp.pages.ViewModelPage;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
+import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.engine.GraphvizCmdLineEngine;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.rendering.template.JavalinJte;
@@ -13,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -21,9 +24,15 @@ public class CmmServer {
     private static int portNum = 8080;
     private static String imagesDirectory = System.getProperty("user.dir");
     private static String precompiledTemplatesPath;
+    private static String dotExecutablePath;
 
     public static void main(String[] args) {
         parseArgs(args);
+
+        if (dotExecutablePath != null) {
+            logger.debug("Attempting to use dot executable at path " + dotExecutablePath);
+            Graphviz.useEngine(new GraphvizCmdLineEngine(dotExecutablePath));
+        }
 
         if (precompiledTemplatesPath != null) {
             Path targetDirectory = Path.of(precompiledTemplatesPath);
@@ -128,12 +137,16 @@ public class CmmServer {
                         currentParamName = "port";
                         requiredArguments = 1;
                     }
-                    case "-d", "--images-directory" -> {
+                    case "-i", "--images-directory" -> {
                         currentParamName = "images-directory";
                         requiredArguments = 1;
                     }
                     case "-jte", "--precompiled-jte-directory" -> {
                         currentParamName = "precompiled-jte-directory";
+                        requiredArguments = 1;
+                    }
+                    case "-d", "--dot-executable" -> {
+                        currentParamName = "dot-executable";
                         requiredArguments = 1;
                     }
                     default -> {
@@ -173,6 +186,14 @@ public class CmmServer {
                         System.exit(1);
                     }
                     precompiledTemplatesPath = arg;
+                }
+                case "dot-executable" -> {
+                    Path dot = Path.of(arg);
+                    if (!(Files.isRegularFile(dot) && Files.isExecutable(dot))) {
+                        logger.error("\"" + arg + "\" is not an executable file.");
+                        System.exit(1);
+                    }
+                    dotExecutablePath = arg;
                 }
             }
             requiredArguments--;
