@@ -4,12 +4,11 @@ import com.danielwymark.cmmodels.core.evaluation.Evaluator;
 import com.danielwymark.cmmodels.core.evaluation.NaiveEvaluator;
 import com.danielwymark.cmmodels.core.model.Model;
 import com.danielwymark.cmmodels.core.syntax.AtomicFormula;
-import com.danielwymark.cmmodels.core.syntax.CompoundFormula;
 import com.danielwymark.cmmodels.core.syntax.Formula;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class AcyclicConstraint implements Constraint {
+public class AcyclicConstraint implements ModelConstraint {
     private static final Evaluator evaluator = new NaiveEvaluator();
 
     @Override
