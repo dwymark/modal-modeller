@@ -1,4 +1,4 @@
-package com.danielwymark.cmmodels.core.model;
+package com.danielwymark.cmmodels.core.generator;
 
 import java.util.stream.Stream;
 

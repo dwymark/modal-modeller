@@ -1,6 +1,7 @@
 package com.danielwymark.cmmodels.core.model;
 
 import com.danielwymark.cmmodels.core.exceptions.GeneratorExhaustedError;
+import com.danielwymark.cmmodels.core.generator.Generator;
 
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
