@@ -2,12 +2,11 @@ package com.danielwymark.cmmodels;
 
 import com.danielwymark.cmmodels.core.model.Model;
 import com.danielwymark.cmmodels.core.model.ModelBuilder;
-import com.danielwymark.cmmodels.core.model.FactlessModelGenerator;
+import com.danielwymark.cmmodels.core.model.RestrictedModelGenerator;
 import com.danielwymark.cmmodels.core.relations.NaiveBisimulationSolver;
 import com.danielwymark.cmmodels.core.relations.Relation;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
-import guru.nidi.graphviz.model.Graph;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +37,7 @@ public class AdhocTests {
 
     private static void generateFactlessModels() {
         final AtomicInteger i = new AtomicInteger(-1);
-        new FactlessModelGenerator().generate()
+        new RestrictedModelGenerator().generate()
                 .limit(512+16+2)
                 .forEach((Model model) -> {
                     try {

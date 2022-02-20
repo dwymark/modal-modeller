@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  * Generates all possible models with no propositions true at any world.
  * Isomorphic copies will occur in the output -- all possible accessibility relations are included.
  */
-public class FactlessModelGenerator implements Generator<Model> {
+public class RestrictedModelGenerator implements Generator<Model> {
     private int numWorlds = 1;
     private BigInteger accessibilityBitString = BigInteger.valueOf(0);
     private BigInteger accessibilityBitStringMax = BigInteger.valueOf(2);
