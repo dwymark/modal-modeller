@@ -12,7 +12,14 @@ public class NaiveEvaluator implements Evaluator {
     public boolean evaluate(Model model, World world, Formula formula) throws OutOfDomainError {
         switch (formula.operator) {
             case NONE -> {
-                return model.propositionsTrueAt(world).contains((AtomicFormula) formula);
+                var atomicFormula = ((AtomicFormula) formula);
+                if (atomicFormula.alwaysTrue()) {
+                    return true;
+                }
+                if (atomicFormula.alwaysFalse()) {
+                    return false;
+                }
+                return model.propositionsTrueAt(world).contains(atomicFormula);
             }
             case NEGATE -> {
                 return !evaluate(model, world, ((CompoundFormula) formula).operand1);

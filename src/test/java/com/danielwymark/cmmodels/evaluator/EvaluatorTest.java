@@ -22,8 +22,6 @@ public class EvaluatorTest {
 
         var p = new AtomicFormula("p");
         var q = new AtomicFormula("q");
-        var bot = new AtomicFormula("bot");
-        var top = new AtomicFormula("top");
 
         var pAndQ = new CompoundFormula(Operator.MEET, p, q);
         var pOrQ =  new CompoundFormula(Operator.JOIN, p, q);
@@ -32,13 +30,13 @@ public class EvaluatorTest {
         var mightP = new CompoundFormula(Operator.MIGHT, p);
         var mightQ = new CompoundFormula(Operator.MIGHT, q);
 
-        var mustBot = new CompoundFormula(Operator.MUST, bot);
-        var mightTop = new CompoundFormula(Operator.MIGHT, top);
+        var mustBot = new CompoundFormula(Operator.MUST, AtomicFormula.BOTTOM);
+        var mightTop = new CompoundFormula(Operator.MIGHT, AtomicFormula.TOP);
 
         try {
             Assert.assertTrue(evaluator.evaluate(model, w0, p));
             Assert.assertTrue(evaluator.evaluate(model, w0, q));
-            Assert.assertFalse(evaluator.evaluate(model, w0, bot));
+            Assert.assertFalse(evaluator.evaluate(model, w0, AtomicFormula.BOTTOM));
             Assert.assertTrue(evaluator.evaluate(model, w1, p));
             Assert.assertFalse(evaluator.evaluate(model, w1, q));
             Assert.assertTrue(evaluator.evaluate(model, w3, q));

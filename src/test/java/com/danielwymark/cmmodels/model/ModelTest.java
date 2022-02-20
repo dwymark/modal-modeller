@@ -34,9 +34,6 @@ public class ModelTest {
         modelBuilder.addFact(0, "q");
         modelBuilder.addFact(1, "p");
         modelBuilder.addFact(3, "q");
-        for (int i = 0; i < NUM_WORLDS; ++i) {
-            modelBuilder.addFact(i, "top");
-        }
 
         return modelBuilder.build();
     }
