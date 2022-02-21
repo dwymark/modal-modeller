@@ -52,4 +52,30 @@ public class ConstraintTest {
         model = modelBuilder.build();
         Assert.assertTrue(ConstraintUtil.isUnreachable(model, 2));
     }
+
+    @Test
+    public void TreeTestIsAccurate() {
+        var modelBuilder = new ModelBuilder(1);
+        var model = modelBuilder.build();
+        Assert.assertTrue(ConstraintUtil.isTree(model, 0));
+
+        modelBuilder.addRelation(0, 1);
+        model = modelBuilder.build();
+        Assert.assertTrue(ConstraintUtil.isTree(model, 0));
+        Assert.assertFalse(ConstraintUtil.isTree(model, 1));
+
+        modelBuilder.addRelation(0, 2);
+        modelBuilder.addRelation(2, 3);
+        model = modelBuilder.build();
+        Assert.assertTrue(ConstraintUtil.isTree(model, 0));
+
+        modelBuilder.addRelation(1, 3);
+        model = modelBuilder.build();
+        Assert.assertTrue(ConstraintUtil.isAcyclic(model));
+        Assert.assertFalse(ConstraintUtil.isTree(model, 0));
+
+        modelBuilder = new ModelBuilder(2);
+        model = modelBuilder.build();
+        Assert.assertFalse(ConstraintUtil.isTree(model, 0));
+    }
 }

@@ -9,8 +9,10 @@ public class ConstraintUtil {
     private static final AcyclicConstraint acyclic = new AcyclicConstraint();
     private static final UnreachableConstraint unreachable = new UnreachableConstraint();
 
-    public static boolean isTree(Model m) { return tree.holdsOf(m); }
+
     public static boolean isAcyclic(Model m) { return acyclic.holdsOf(m); }
+    public static boolean isTree(Model m, World w) { return tree.holdsOf(m, w); }
+    public static boolean isTree(Model m, int w) { return tree.holdsOf(m, w); }
     public static boolean isUnreachable(Model m, World w) { return unreachable.holdsOf(m, w); }
     public static boolean isUnreachable(Model m, int w) { return unreachable.holdsOf(m, w); }
 }
