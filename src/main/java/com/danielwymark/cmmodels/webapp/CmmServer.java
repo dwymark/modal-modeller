@@ -1,5 +1,6 @@
 package com.danielwymark.cmmodels.webapp;
 
+import com.danielwymark.cmmodels.core.model.ModelBuilder;
 import com.danielwymark.cmmodels.webapp.pages.BisimulationTesterPage;
 import com.danielwymark.cmmodels.webapp.pages.CreateModelPage;
 import com.danielwymark.cmmodels.webapp.pages.ViewBisimulationPage;
@@ -116,6 +117,18 @@ public class CmmServer {
         //--------------------------------------------------------------------------------------------------------------
         app.get("/bisimulation-tester", ctx -> {
             var page = new BisimulationTesterPage();
+            page.render(ctx);
+        });
+
+        // ModelMinimizationPage
+        //--------------------------------------------------------------------------------------------------------------
+        app.get("/model-minimizer/minimize/{modelNum}", ctx -> {
+            var originalModelNumber = ctx.pathParam("modelNum");
+
+            var minimizedModelNumber = ModelBuilder.buildFromModelNumber(originalModelNumber)
+                    .minimize().modelNumber();
+
+            var page = new ViewModelPage(minimizedModelNumber, imagesDirectory);
             page.render(ctx);
         });
 

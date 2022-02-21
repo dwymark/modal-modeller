@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+// TODO: Document this thoroughly
 public class NaiveBisimulationSolver implements BisimulationSolver {
     private final Logger logger = LogManager.getLogger(NaiveBisimulationSolver.class);
 

@@ -1,6 +1,8 @@
 package com.danielwymark.cmmodels.core.model;
 
 import com.danielwymark.cmmodels.core.exceptions.OutOfDomainError;
+import com.danielwymark.cmmodels.core.relations.Block;
+import com.danielwymark.cmmodels.core.relations.NaiveBisimulationSolver;
 import com.danielwymark.cmmodels.core.syntax.AtomicFormula;
 import guru.nidi.graphviz.attribute.Font;
 import guru.nidi.graphviz.attribute.Rank;
@@ -129,6 +131,32 @@ public final class Model {
             return new HashSet<>();
         return propositionsTrueAt(world.index());
     }
+
+    /*::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+     * Operations
+     */
+
+    public Model minimize() {
+        var solver = new NaiveBisimulationSolver();
+        var partitioning = solver.findCoarsestPartitioning(this, this);
+        var modelBuilder = new ModelBuilder(partitioning.size());
+        for (int i = 0; i < partitioning.size(); ++i) {
+            Block block = partitioning.get(i);
+            World representative = block.worlds().stream().findFirst().orElse(null);
+            if (representative == null)
+                throw new IllegalStateException("This should be impossible");
+            for (World world : worldsAccessibleFrom(representative)) {
+                for (int j = 0; j < partitioning.size(); ++j) {
+                    if (partitioning.get(j).worlds().contains(world)) {
+                        modelBuilder.addRelation(i, j);
+                        break;
+                    }
+                }
+            }
+        }
+        return modelBuilder.build();
+    }
+
 
     /*::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
      * Visualization
