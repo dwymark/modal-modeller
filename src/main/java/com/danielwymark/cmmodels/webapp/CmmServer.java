@@ -1,10 +1,7 @@
 package com.danielwymark.cmmodels.webapp;
 
 import com.danielwymark.cmmodels.core.model.ModelBuilder;
-import com.danielwymark.cmmodels.webapp.pages.BisimulationTesterPage;
-import com.danielwymark.cmmodels.webapp.pages.CreateModelPage;
-import com.danielwymark.cmmodels.webapp.pages.ViewBisimulationPage;
-import com.danielwymark.cmmodels.webapp.pages.ViewModelPage;
+import com.danielwymark.cmmodels.webapp.pages.*;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import guru.nidi.graphviz.engine.Graphviz;
@@ -122,13 +119,17 @@ public class CmmServer {
 
         // ModelMinimizationPage
         //--------------------------------------------------------------------------------------------------------------
-        app.get("/model-minimizer/minimize/{modelNum}", ctx -> {
-            var originalModelNumber = ctx.pathParam("modelNum");
+        app.post("/view-minimized", ctx -> {
+            var originalModelNumber = ctx.formParam("modelNum");
 
             var minimizedModelNumber = ModelBuilder.buildFromModelNumber(originalModelNumber)
                     .minimize().modelNumber();
 
             var page = new ViewModelPage(minimizedModelNumber, imagesDirectory);
+            page.render(ctx);
+        });
+        app.get("/model-minimizer", ctx -> {
+            var page = new ModelMinimizerPage();
             page.render(ctx);
         });
 
