@@ -4,6 +4,7 @@ import com.danielwymark.cmmodels.core.model.World;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class WorldPath {
     private final List<World> worldsList;
 
@@ -30,6 +31,8 @@ public class WorldPath {
     public int size() {
         return worldsList.size() - 1; // count transitions, not worlds
     }
+
+    public boolean contains(World world) { return worldsList.contains(world); }
 
     @Override
     public boolean equals(Object o) {
