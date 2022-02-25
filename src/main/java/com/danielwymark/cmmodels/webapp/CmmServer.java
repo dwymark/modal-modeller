@@ -21,7 +21,7 @@ public class CmmServer {
     private static final Logger logger = LogManager.getLogger(CmmServer.class);
     private static int portNum = 8080;
     private static String imagesDirectory = System.getProperty("user.dir");
-    private static String precompiledTemplatesPath;
+    private static boolean usePrecompiledTemplates;
     private static String dotExecutablePath;
 
     public static void main(String[] args) {
@@ -32,9 +32,8 @@ public class CmmServer {
             Graphviz.useEngine(new GraphvizCmdLineEngine(dotExecutablePath));
         }
 
-        if (precompiledTemplatesPath != null) {
-            Path targetDirectory = Path.of(precompiledTemplatesPath);
-            TemplateEngine templateEngine = TemplateEngine.createPrecompiled(targetDirectory, ContentType.Html);
+        if (usePrecompiledTemplates) {
+            TemplateEngine templateEngine = TemplateEngine.createPrecompiled(ContentType.Html);
             JavalinJte.configure(templateEngine);
         }
 
@@ -155,9 +154,11 @@ public class CmmServer {
                         currentParamName = "images-directory";
                         requiredArguments = 1;
                     }
-                    case "-jte", "--precompiled-jte-directory" -> {
-                        currentParamName = "precompiled-jte-directory";
-                        requiredArguments = 1;
+                    case "-jte", "--use-precompiled-jte" -> {
+                        currentParamName = "use-precompiled-jte";
+                        //noinspection ConstantConditions
+                        requiredArguments = 0;
+                        usePrecompiledTemplates = true;
                     }
                     case "-d", "--dot-executable" -> {
                         currentParamName = "dot-executable";
@@ -193,13 +194,6 @@ public class CmmServer {
                         System.exit(1);
                     }
                     imagesDirectory = arg;
-                }
-                case "precompiled-jte-directory" -> {
-                    if (!new File(arg).isDirectory()) {
-                        logger.error("\"" + arg + "\" is not a valid directory.");
-                        System.exit(1);
-                    }
-                    precompiledTemplatesPath = arg;
                 }
                 case "dot-executable" -> {
                     Path dot = Path.of(arg);
