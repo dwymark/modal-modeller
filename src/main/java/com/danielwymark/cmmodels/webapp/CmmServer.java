@@ -111,10 +111,7 @@ public class CmmServer {
 
         // BisimulationTesterPage
         //--------------------------------------------------------------------------------------------------------------
-        app.get("/bisimulation-tester", ctx -> {
-            var page = new BisimulationTesterPage();
-            page.render(ctx);
-        });
+        app.get("/bisimulation-tester", ctx -> ctx.render("BisimulationTester.jte"));
 
         // ModelMinimizationPage
         //--------------------------------------------------------------------------------------------------------------
@@ -127,10 +124,7 @@ public class CmmServer {
             var page = new ViewModelPage(minimizedModelNumber, imagesDirectory);
             page.render(ctx);
         });
-        app.get("/model-minimizer", ctx -> {
-            var page = new ModelMinimizerPage();
-            page.render(ctx);
-        });
+        app.get("/model-minimizer", ctx -> ctx.render("ModelMinimizer.jte"));
 
     }
 
