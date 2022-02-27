@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css"/>
 <script src="https://unpkg.com/htmx.org@1.6.1"></script>
 <script>
-    //todo: save left and right model numbers in the hypertext; extract them with javascript
+    // save left and right model numbers in the hypertext; extract them with javascript
     function extractModelNumber(idx) {
         let elements = document.querySelectorAll('.modal-model');
         if (elements.length === 2)
