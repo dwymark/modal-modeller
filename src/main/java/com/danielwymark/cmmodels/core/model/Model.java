@@ -58,7 +58,8 @@ public final class Model {
         }
     }
 
-    public String modelNumber() {
+    public String
+    modelNumber() {
         var accessibilityRelation = BigInteger.ZERO;
         var mask = BigInteger.ONE;
         for (int i = 0; i < numWorlds; ++i) {
@@ -179,7 +180,9 @@ public final class Model {
                 label += "\n" + Arrays.toString(truePropositions.stream().sorted().toArray());
             }
 
-            Node worldNode = node(world.toString()).with("label", label);
+            Node worldNode = node(world.toString()).with("label", label)
+                    .with("style", "filled")
+                    .with("color", "red");
             for (World neighbor : worldsAccessibleFrom(world)) {
                 worldNode = worldNode.link(neighbor.toString());
             }

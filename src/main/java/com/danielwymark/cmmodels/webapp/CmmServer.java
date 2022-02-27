@@ -126,6 +126,11 @@ public class CmmServer {
         });
         app.get("/model-minimizer", ctx -> ctx.render("ModelMinimizer.jte"));
 
+        // ViewModelGroupPage
+        //--------------------------------------------------------------------------------------------------------------
+        app.get("/view-model-group/{modelNums}", ctx -> {
+
+        });
     }
 
     private static void parseArgs(String[] args) {

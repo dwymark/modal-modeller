@@ -6,5 +6,3 @@
     <img src="/images/${leftModelNum}+${rightModelNum}.svg" class="w-100" style="max-height: 30rem" alt="bisimulation between ${leftModelNum} and ${rightModelNum}"/>
     <p class="tc">${partitioning}</p>
 </div>
-
-
