@@ -19,7 +19,7 @@ public class PointedModel extends Model {
 
     @Override
     public String modelNumber() {
-        return "(" + modelNumber() + "," + pointedWorld.index() + ")";
+        return "(" + super.modelNumber() + "," + pointedWorld.index() + ")";
     }
 
     @Override

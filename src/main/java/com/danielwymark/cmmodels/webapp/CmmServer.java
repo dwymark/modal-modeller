@@ -1,5 +1,6 @@
 package com.danielwymark.cmmodels.webapp;
 
+import com.danielwymark.cmmodels.core.model.Model;
 import com.danielwymark.cmmodels.core.model.ModelBuilder;
 import com.danielwymark.cmmodels.webapp.pages.*;
 import gg.jte.ContentType;
@@ -15,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class CmmServer {
@@ -126,6 +129,15 @@ public class CmmServer {
         });
         app.get("/model-minimizer", ctx -> ctx.render("ModelMinimizer.jte"));
 
+        // ViewModelGroupPage
+        //--------------------------------------------------------------------------------------------------------------
+        app.get("/view-model-group/{modelNums}", ctx -> {
+            List<Model> models = Arrays.stream(ctx.pathParam("modelNums").split("_"))
+                    .map(ModelBuilder::buildFromModelNumber)
+                    .toList();
+            var page = new ViewModelGroupPage(models);
+            page.render(ctx);
+        });
     }
 
     private static void parseArgs(String[] args) {
