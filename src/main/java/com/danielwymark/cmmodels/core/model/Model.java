@@ -26,8 +26,8 @@ public class Model {
     protected final World[] worlds;
     protected final Set<World>[] accessMap;
     protected final Set<AtomicFormula>[] valuationMap;
-    private final int numWorlds;
-    private final long id;
+    protected final int numWorlds;
+    protected final long id;
     private static final AtomicLong nextModelNum = new AtomicLong(0);
 
     @SuppressWarnings("unchecked") // suppress warning arising from making an array of sets
@@ -63,7 +63,7 @@ public class Model {
         accessMap = model.accessMap;
         valuationMap = model.valuationMap;
         numWorlds = model.numWorlds;
-        id = nextModelNum.getAndIncrement();
+        id = model.id;
     }
 
     public String modelNumber() {
@@ -189,7 +189,6 @@ public class Model {
 
             Node worldNode = node(world.toString()).with("label", label);
             worldNode = coloring.color(world, worldNode);
-
             for (World neighbor : worldsAccessibleFrom(world)) {
                 worldNode = worldNode.link(neighbor.toString());
             }

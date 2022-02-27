@@ -28,8 +28,7 @@ public class PointedModel extends Model {
             if (world != pointedWorld)
                 return node;
             return node.with("style", "filled")
-                    .with("fillcolor", "gold")
-                    .with("color", "green");
+                    .with("fillcolor", "gold");
         });
     }
 }

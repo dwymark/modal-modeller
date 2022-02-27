@@ -4,6 +4,7 @@ import com.danielwymark.cmmodels.core.exceptions.InvalidModelNumberError;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.swing.text.html.Option;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -21,33 +22,40 @@ public class ModelBuilder {
     private int numWorlds;
     private final HashMap<Integer, Set<Integer>> tentativeAccessMap;
     private final HashMap<Integer, Set<String>> tentativeValuationMap;
+    private Optional<Integer> pointedWorld = Optional.empty();
 
     public ModelBuilder(String modelNum) {
         tentativeAccessMap = new HashMap<>();
         tentativeValuationMap = new HashMap<>();
 
-        Pattern r = Pattern.compile("(\\d+)w(\\d+)");
+        Pattern r = Pattern.compile("[(]?(\\d+)w(\\d+)(,([0-9]+))?[)]?");
         Matcher m = r.matcher(modelNum);
-        if (m.matches() && m.groupCount() == 2) {
-            numWorlds = Integer.parseInt(m.group(1));
-            var accessibilityRelation = new BigInteger(m.group(2));
+        if (!m.matches())
+            throw new InvalidModelNumberError();
 
-            // Every world W's accessibility relation given by a segment of a bitstream.
-            // Each bit in the segment indicates whether W is related to a particular world.
+        numWorlds = Integer.parseInt(m.group(1));
+        var accessibilityRelation = new BigInteger(m.group(2));
 
-            var mask = BigInteger.ONE;
-            for (int i = 0; i < numWorlds; ++i) {
-                for (int j = 0; j < numWorlds; ++j) {
-                    var masked = mask.and(accessibilityRelation);
-                    if (masked.compareTo(BigInteger.ZERO) != 0) {
-                        addRelation(i, j);
-                    }
-                    mask = mask.shiftLeft(1);
+        // Every world W's accessibility relation given by a segment of a bitstream.
+        // Each bit in the segment indicates whether W is related to a particular world.
+
+        var mask = BigInteger.ONE;
+        for (int i = 0; i < numWorlds; ++i) {
+            for (int j = 0; j < numWorlds; ++j) {
+                var masked = mask.and(accessibilityRelation);
+                if (masked.compareTo(BigInteger.ZERO) != 0) {
+                    addRelation(i, j);
                 }
+                mask = mask.shiftLeft(1);
             }
-            return;
         }
-        throw new InvalidModelNumberError();
+
+        String pointedWorldStr = m.group(4);
+        if (pointedWorldStr != null) {
+            pointedWorld = Optional.of(Integer.parseInt(pointedWorldStr));
+            if (pointedWorld.get() >= numWorlds)
+                numWorlds = pointedWorld.get() + 1;
+        }
     }
 
     public ModelBuilder(int numWorlds) {
@@ -147,6 +155,10 @@ public class ModelBuilder {
             valuationMap.add(truths);
         }
 
-        return new Model(numWorlds, accessMap, valuationMap);
+        var model = new Model(numWorlds, accessMap, valuationMap);
+        if (pointedWorld.isPresent()) {
+            return new PointedModel(model, model.getWorld(pointedWorld.get()));
+        }
+        return model;
     }
 }
