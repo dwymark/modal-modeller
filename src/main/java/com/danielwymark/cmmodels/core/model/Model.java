@@ -162,7 +162,7 @@ public final class Model {
      * Visualization
      */
 
-    public Graph generateGraph() {
+    public Graph generateGraph(WorldColoring coloring) {
         Graph graph = graph("Model " + hashCode()).directed()
                 .graphAttr().with(Rank.dir(LEFT_TO_RIGHT))
                 .nodeAttr().with(Font.name("sans-serif"))
@@ -180,6 +180,8 @@ public final class Model {
             }
 
             Node worldNode = node(world.toString()).with("label", label);
+            worldNode = coloring.color(world, worldNode);
+
             for (World neighbor : worldsAccessibleFrom(world)) {
                 worldNode = worldNode.link(neighbor.toString());
             }
@@ -187,6 +189,10 @@ public final class Model {
         }
 
         return graph;
+    }
+
+    public Graph generateGraph() {
+        return generateGraph((world, worldNode) -> worldNode);
     }
 
     /*::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
