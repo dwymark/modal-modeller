@@ -22,15 +22,15 @@ import static guru.nidi.graphviz.model.Factory.node;
  * an accessibility relation on worlds R, and a valuation map V(s, p) which
  * maps propositions to true or false in a world.
  */
-public final class Model {
-    private final World[] worlds;
-    private final Set<World>[] accessMap;
-    private final Set<AtomicFormula>[] valuationMap;
+public class Model {
+    protected final World[] worlds;
+    protected final Set<World>[] accessMap;
+    protected final Set<AtomicFormula>[] valuationMap;
     private final int numWorlds;
     private final long id;
     private static final AtomicLong nextModelNum = new AtomicLong(0);
 
-    @SuppressWarnings("unchecked") // array of sets
+    @SuppressWarnings("unchecked") // suppress warning arising from making an array of sets
     public Model(int numWorlds, List<Set<Integer>> accessMap, List<Set<String>> valuationMap) {
         id = nextModelNum.getAndIncrement();
         this.numWorlds = numWorlds;
@@ -56,6 +56,14 @@ public final class Model {
                 this.valuationMap[i].add(new AtomicFormula(letter));
             }
         }
+    }
+
+    public Model(Model model) {
+        worlds = model.worlds;
+        accessMap = model.accessMap;
+        valuationMap = model.valuationMap;
+        numWorlds = model.numWorlds;
+        id = nextModelNum.getAndIncrement();
     }
 
     public String modelNumber() {
