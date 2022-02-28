@@ -13,16 +13,3 @@
         @endfor
     </ul>
 </div>
-
-
-<%--<!DOCTYPE html>--%>
-<%--<html lang="en">--%>
-<%--<title>test</title>--%>
-<%--<meta name="viewport" content="width=device-width, initial-scale=1"/>--%>
-<%--<link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css"/>--%>
-<%--<script src="https://unpkg.com/htmx.org@1.6.1"></script>--%>
-<%--<body class="bg-dark-gray">--%>
-
-
-<%--</body>--%>
-<%--</html>--%>
