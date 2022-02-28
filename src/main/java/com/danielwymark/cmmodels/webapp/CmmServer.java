@@ -129,7 +129,7 @@ public class CmmServer {
         });
         app.get("/model-minimizer", ctx -> ctx.render("ModelMinimizer.jte"));
 
-        // ViewModelGroupPage
+        // Bisimulation Classes
         //--------------------------------------------------------------------------------------------------------------
         app.get("/view-model-group/{modelNums}", ctx -> {
             List<Model> models = Arrays.stream(ctx.pathParam("modelNums").split("_"))
@@ -137,6 +137,12 @@ public class CmmServer {
                     .toList();
             var page = new ViewModelGroupPage(models);
             page.render(ctx);
+        });
+        app.get("/view-model-group-list/{modelNumsList}", ctx -> {
+            List<List<String>> modelNumsList = Arrays.stream(ctx.pathParam("modelNumsList").split("-"))
+                    .map(list -> Arrays.stream(list.split("_")).toList())
+                    .toList();
+            ctx.render("ViewModelGroupList.jte", Map.of("modelNumsList", modelNumsList));
         });
     }
 
