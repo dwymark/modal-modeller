@@ -31,4 +31,10 @@ public class PointedModel extends Model {
                     .with("fillcolor", "gold");
         });
     }
+
+    @Override
+    public PointedModel minimize() {
+        var minimized = super.minimize();
+        return new PointedModel(minimized, minimized.getWorld(pointedWorld.index()));
+    }
 }

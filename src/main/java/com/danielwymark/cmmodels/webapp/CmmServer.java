@@ -2,6 +2,8 @@ package com.danielwymark.cmmodels.webapp;
 
 import com.danielwymark.cmmodels.core.model.Model;
 import com.danielwymark.cmmodels.core.model.ModelBuilder;
+import com.danielwymark.cmmodels.core.model.PointedModel;
+import com.danielwymark.cmmodels.core.relations.BisimulationClassComputer;
 import com.danielwymark.cmmodels.webapp.pages.*;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
@@ -142,6 +144,19 @@ public class CmmServer {
             List<List<String>> modelNumsList = Arrays.stream(ctx.pathParam("modelNumsList").split("M"))
                     .map(list -> Arrays.stream(list.split("_")).toList())
                     .toList();
+            ctx.render("ViewModelGroupList.jte", Map.of("modelNumsList", modelNumsList));
+        });
+
+        var bisimulationComputer = new BisimulationClassComputer();
+        app.get("/bisimulation-classes/{numSteps}", ctx -> {
+            int numSteps = Integer.parseInt(ctx.pathParam("numSteps"));
+            for (int i = 0; i < numSteps; ++i) {
+                bisimulationComputer.analyzeNextModel();
+            }
+            List<List<PointedModel>> bisimulationClasses = bisimulationComputer.getBisimulationClasses();
+            List<List<String>> modelNumsList = bisimulationClasses.stream()
+                    .map(c -> c.stream().map(PointedModel::modelNumber).toList())
+                            .toList();
             ctx.render("ViewModelGroupList.jte", Map.of("modelNumsList", modelNumsList));
         });
     }

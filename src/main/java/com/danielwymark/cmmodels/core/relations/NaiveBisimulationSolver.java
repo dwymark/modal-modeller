@@ -37,17 +37,24 @@ public class NaiveBisimulationSolver implements BisimulationSolver {
     public Relation findLargestBisimulation(Model model1, Model model2) {
         System.out.println("Searching for bisimulation between " + model1 + " and " + model2);
 
+        List<World> allWorlds = new ArrayList<>(model1.getWorlds());
+        allWorlds.addAll(model2.getWorlds());
+
         List<Block> partitioning = findCoarsestPartitioning(model1, model2);
 
         // Construct relation from resulting partitioning
-        Map<World, World> mapping = new HashMap<>();
+        Map<World, Set<World>> mapping = new HashMap<>();
+        for (var world : allWorlds) {
+            mapping.put(world, new HashSet<>());
+        }
+
         for (var block : partitioning) {
             Set<World> worlds = block.worlds();
             for (var world1 : worlds) {
                 for (var world2 : worlds) {
                     if (world1.modelId() != world2.modelId()) {
-                        mapping.put(world1, world2);
-                        mapping.put(world2, world1);
+                        mapping.get(world1).add(world2);
+                        mapping.get(world2).add(world1);
                     }
                 }
             }

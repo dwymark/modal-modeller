@@ -7,7 +7,7 @@
     <div hx-get="/view-model/${representativeModelNum}" hx-swap="outerHTML"
          hx-target="this" hx-trigger="load"></div>
     <div>Total: ${allModelNums.size()} models</div>
-    <ul>
+    <ul class="h4" style="overflow: hidden;overflow-y:scroll">
         @for(String modelNum : allModelNums)
             <li>${modelNum}</li>
         @endfor
