@@ -139,7 +139,7 @@ public class CmmServer {
             page.render(ctx);
         });
         app.get("/view-model-group-list/{modelNumsList}", ctx -> {
-            List<List<String>> modelNumsList = Arrays.stream(ctx.pathParam("modelNumsList").split("-"))
+            List<List<String>> modelNumsList = Arrays.stream(ctx.pathParam("modelNumsList").split("M"))
                     .map(list -> Arrays.stream(list.split("_")).toList())
                     .toList();
             ctx.render("ViewModelGroupList.jte", Map.of("modelNumsList", modelNumsList));
