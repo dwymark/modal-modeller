@@ -140,6 +140,18 @@ public class CmmServer {
             var page = new ViewModelGroupPage(models);
             page.render(ctx);
         });
+        app.post("/view-model-group", ctx -> {
+            String modelNums = ctx.formParam("modelNums");
+            if (modelNums == null) {
+                ctx.status(500);
+                return;
+            }
+            List<Model> models = Arrays.stream(modelNums.split("_"))
+                    .map(ModelBuilder::buildFromModelNumber)
+                    .toList();
+            var page = new ViewModelGroupPage(models);
+            page.render(ctx);
+        });
         app.get("/view-model-group-list/{modelNumsList}", ctx -> {
             List<List<String>> modelNumsList = Arrays.stream(ctx.pathParam("modelNumsList").split("M"))
                     .map(list -> Arrays.stream(list.split("_")).toList())
@@ -148,16 +160,19 @@ public class CmmServer {
         });
 
         var bisimulationComputer = new BisimulationClassComputer();
+        var lock = new Object();
         app.get("/bisimulation-classes/{numSteps}", ctx -> {
-            int numSteps = Integer.parseInt(ctx.pathParam("numSteps"));
-            for (int i = 0; i < numSteps; ++i) {
-                bisimulationComputer.analyzeNextModel();
+            synchronized (lock) {
+                int numSteps = Integer.parseInt(ctx.pathParam("numSteps"));
+                for (int i = 0; i < numSteps; ++i) {
+                    bisimulationComputer.analyzeNextModel();
+                }
+                List<List<PointedModel>> bisimulationClasses = bisimulationComputer.getBisimulationClasses();
+                List<List<String>> modelNumsList = bisimulationClasses.stream()
+                        .map(c -> c.stream().map(PointedModel::modelNumber).toList())
+                        .toList();
+                ctx.render("ViewModelGroupList.jte", Map.of("modelNumsList", modelNumsList));
             }
-            List<List<PointedModel>> bisimulationClasses = bisimulationComputer.getBisimulationClasses();
-            List<List<String>> modelNumsList = bisimulationClasses.stream()
-                    .map(c -> c.stream().map(PointedModel::modelNumber).toList())
-                            .toList();
-            ctx.render("ViewModelGroupList.jte", Map.of("modelNumsList", modelNumsList));
         });
     }
 

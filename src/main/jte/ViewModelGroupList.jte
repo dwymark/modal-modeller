@@ -12,8 +12,9 @@
 @for(var modelNums : modelNumsList)
     !{var concatenatedModelNums = String.join("_", modelNums);}
 
-    <div hx-get="/view-model-group/${concatenatedModelNums}" hx-swap="outerHTML"
-         hx-target="this" hx-trigger="load" ></div>
+    <div hx-post="/view-model-group" hx-swap="outerHTML"
+         hx-target="this" hx-trigger="load"
+         hx-vals='{"modelNums": "${concatenatedModelNums}"}'></div>
 @endfor
 </div>
 
