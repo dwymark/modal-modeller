@@ -60,7 +60,16 @@ public class Model {
     }
 
     @SuppressWarnings("unchecked") // suppress warning arising from making an array of sets
-    public Model(Model model) {
+    public Model(Model model, boolean shallowCopy) {
+        if (shallowCopy) {
+            id = model.id;
+            numWorlds = model.numWorlds;
+            worlds = model.worlds.clone();
+            accessMap = model.accessMap.clone();
+            valuationMap = model.valuationMap.clone();
+            return;
+        }
+
         id = nextModelNum.getAndIncrement();
         numWorlds = model.numWorlds;
 
@@ -79,6 +88,7 @@ public class Model {
 
         valuationMap = model.valuationMap.clone();
     }
+
 
     public String modelNumber() {
         var accessibilityRelation = BigInteger.ZERO;
@@ -158,12 +168,18 @@ public class Model {
      * Operations
      */
 
-    public Model minimize() {
+    // providing a foothold for pointed model subclass to modify minimization algorithm
+    protected interface BlockProcessor {
+        void process(Block block, int idx);
+    }
+
+    protected Model minimize(BlockProcessor processor) {
         var solver = new NaiveBisimulationSolver();
         var partitioning = solver.findCoarsestPartitioning(this, this);
         var modelBuilder = new ModelBuilder(partitioning.size());
         for (int i = 0; i < partitioning.size(); ++i) {
             Block block = partitioning.get(i);
+            processor.process(block, i);
             World representative = block.worlds().stream().findFirst().orElse(null);
             if (representative == null)
                 throw new IllegalStateException("This should be impossible");
@@ -177,6 +193,10 @@ public class Model {
             }
         }
         return modelBuilder.build();
+    }
+
+    public Model minimize() {
+        return minimize((b,i) -> {});
     }
 
 
