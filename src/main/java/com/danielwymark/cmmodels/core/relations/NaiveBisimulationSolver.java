@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 // TODO: Document this thoroughly
 public class NaiveBisimulationSolver implements BisimulationSolver {
-    private final Logger logger = LogManager.getLogger(NaiveBisimulationSolver.class);
+    private final Logger logger = LogManager.getLogger();
 
     public List<Block> findCoarsestPartitioning(Model model1, Model model2) {
         Set<World> universe = Stream.concat(model1.getWorlds().stream(), model2.getWorlds().stream())
@@ -19,7 +19,7 @@ public class NaiveBisimulationSolver implements BisimulationSolver {
         List<PartitionFilter> filters = new ArrayList<>();
 
         filters.add(w -> {
-            var s = Stream.concat(
+            Set<World> s = Stream.concat(
                             model1.worldsAccessibleFrom(w).stream(),
                             model2.worldsAccessibleFrom(w).stream())
                     .collect(Collectors.toSet());
@@ -35,7 +35,7 @@ public class NaiveBisimulationSolver implements BisimulationSolver {
 
     @Override
     public Relation findLargestBisimulation(Model model1, Model model2) {
-        System.out.println("Searching for bisimulation between " + model1 + " and " + model2);
+        logger.trace("Searching for bisimulation between " + model1 + " and " + model2);
 
         List<World> allWorlds = new ArrayList<>(model1.getWorlds());
         allWorlds.addAll(model2.getWorlds());
