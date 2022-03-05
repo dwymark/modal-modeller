@@ -12,6 +12,7 @@ import guru.nidi.graphviz.model.Node;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import static guru.nidi.graphviz.attribute.Rank.RankDir.LEFT_TO_RIGHT;
 import static guru.nidi.graphviz.model.Factory.graph;
@@ -58,12 +59,25 @@ public class Model {
         }
     }
 
+    @SuppressWarnings("unchecked") // suppress warning arising from making an array of sets
     public Model(Model model) {
-        worlds = model.worlds;
-        accessMap = model.accessMap;
-        valuationMap = model.valuationMap;
+        id = nextModelNum.getAndIncrement();
         numWorlds = model.numWorlds;
-        id = model.id;
+
+        worlds = new World[numWorlds];
+        for (int i = 0; i < numWorlds; ++i) {
+            worlds[i] = new World(i, id);
+        }
+
+        this.accessMap = new Set[numWorlds];
+        for (int i = 0; i < numWorlds; ++i) {
+            this.accessMap[i] = new HashSet<>();
+            for (var otherWorld : model.accessMap[i]) {
+                this.accessMap[i].add(worlds[otherWorld.index()]);
+            }
+        }
+
+        valuationMap = model.valuationMap.clone();
     }
 
     public String modelNumber() {
