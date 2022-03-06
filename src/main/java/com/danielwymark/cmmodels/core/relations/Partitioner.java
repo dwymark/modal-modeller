@@ -21,10 +21,16 @@ public class Partitioner {
 
     public void refine() {
         logger.trace("Beginning refinement. Step 0 = " + blocks);
+        int numBlocks;
         int step = 1;
-        while (refineOneStep()) {
-            logger.trace("Step " + step++ + " = " + blocks);
-        }
+        do {
+            blocks = blocks.stream().map(b -> new Block(b.worlds(), new ArrayList<>())).toList();
+            numBlocks = blocks.size();
+            while (refineOneStep()) {
+                logger.trace("Step " + step++ + " = " + blocks);
+            }
+        } while (numBlocks != blocks.size());
+
         logger.trace("Completed refinement.");
     }
 
@@ -69,7 +75,7 @@ public class Partitioner {
             }
 
             if (refinedBlocks.size() == 1) {
-                assert (newBlocks.get(refiningBlockIdx) == refinedBlocks.values().stream().findFirst().get());
+                assert (newBlocks.get(refiningBlockIdx).equals(refinedBlocks.values().stream().findFirst().get()));
                 newBlocks.get(refiningBlockIdx).refinedBy().add(filter);
             }
             else {

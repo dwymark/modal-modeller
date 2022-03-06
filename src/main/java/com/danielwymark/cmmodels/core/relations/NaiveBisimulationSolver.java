@@ -18,6 +18,7 @@ public class NaiveBisimulationSolver implements BisimulationSolver {
                 .collect(Collectors.toSet());
         List<PartitionFilter> filters = new ArrayList<>();
 
+        // This is inefficient -- you are recomputing the value of the filter on every refinement step
         filters.add(w -> {
             Set<World> s = Stream.concat(
                             model1.worldsAccessibleFrom(w).stream(),
@@ -52,10 +53,8 @@ public class NaiveBisimulationSolver implements BisimulationSolver {
             Set<World> worlds = block.worlds();
             for (var world1 : worlds) {
                 for (var world2 : worlds) {
-                    if (world1.modelId() != world2.modelId()) {
-                        mapping.get(world1).add(world2);
-                        mapping.get(world2).add(world1);
-                    }
+                    mapping.get(world1).add(world2);
+                    mapping.get(world2).add(world1);
                 }
             }
         }
