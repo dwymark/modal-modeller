@@ -26,17 +26,18 @@ public class BisimilarityTest {
 
     @Test
     public void BisimilarityRespectsInvarianceLemma() {
-        final List<Formula> formulas = new SequentialFormulaGenerator().generate().limit(1000).toList();
-        final Set<Model> models = new RestrictedModelGenerator().generate()
-                .skip(1000) // only look at relatively large models
-                .limit(1000)
-                .collect(Collectors.toSet());
+        final List<Formula> formulas = new SequentialFormulaGenerator().generate()
+                .skip(100000) // only look at relatively complex formulas
+                .limit(100).toList();
+        final List<Model> models = new RestrictedModelGenerator().generate()
+                .skip(100000) // only look at relatively large models
+                .limit(100).toList();
         final Evaluator evaluator = new NaiveEvaluator();
         final NaiveBisimulationSolver bisimulationSolver = new NaiveBisimulationSolver();
-        models.parallelStream().forEach(model1 -> {
-            models.parallelStream().forEach(model2 -> {
+        models.parallelStream().limit(500).forEach(model1 -> {
+            models.parallelStream().skip(500).forEach(model2 -> {
                 if (model1 == model2)
-                    return;
+                    Assert.fail(); // this should be impossible
                 Relation bisimulation = bisimulationSolver.findLargestBisimulation(model1, model2);
                 var modelMap = Map.of(model1.getId(), model1, model2.getId(), model2);
                 for (var keyval : bisimulation.map().entrySet()) {
@@ -56,7 +57,6 @@ public class BisimilarityTest {
                 }
             });
         });
-        formulas.forEach(System.out::println);
     }
 
     @Test
