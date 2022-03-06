@@ -264,8 +264,7 @@ public class Model {
 
     @Override
     public String toString() {
-        return "Model{" +
-                "numWorlds=" + numWorlds +
+        return "Model{" + modelNumber() +
                 ", id=" + id +
                 '}';
     }
