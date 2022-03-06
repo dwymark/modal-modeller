@@ -28,4 +28,11 @@ public class FormulaTest {
 
         Assert.assertEquals("((¬p⋁q)⋀(¬q⋁p))", p.implies(q).and(q.implies(p)).toString());
     }
+
+//    @Test
+//    public void SequentialFormulaGeneratorIsPredictable() {
+//        var formulaGenerator = new SequentialFormulaGenerator();
+//        var formulas = formulaGenerator.generate().limit(1000).toList();
+//        formulas.forEach(System.out::println);
+//    }
 }

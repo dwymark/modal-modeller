@@ -30,4 +30,14 @@ public abstract class Formula {
     public Formula implies(Formula consequent) {
         return Formula.negate(this).or(consequent);
     }
+
+    public boolean negated() {
+        return this.operator == Operator.NEGATE;
+    }
+
+    public Formula flipPolarity() {
+        if (negated())
+            return ((CompoundFormula)this).operand1;
+        return Formula.negate(this);
+    }
 }
