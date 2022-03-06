@@ -30,7 +30,11 @@ public record Relation(Model left,
         for (var entry : map.entrySet()) {
             World source = entry.getKey();
             for (var target : entry.getValue()) {
-                var pair = new HashSet<>(Set.of(source, target));
+                if (source.equals(target))
+                    continue;
+
+                Set<World> pair = Set.of(source, target);
+
                 if (!seen.contains(pair)) {
                     seen.add(pair);
                     g = g.with(node(source.toString()).link(to(node(target.toString())).with(Style.DOTTED)));
