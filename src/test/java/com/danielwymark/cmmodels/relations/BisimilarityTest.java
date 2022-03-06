@@ -1,20 +1,63 @@
 package com.danielwymark.cmmodels.relations;
 
+import com.danielwymark.cmmodels.core.evaluation.Evaluator;
+import com.danielwymark.cmmodels.core.evaluation.NaiveEvaluator;
 import com.danielwymark.cmmodels.core.model.Model;
 import com.danielwymark.cmmodels.core.model.PointedModel;
 import com.danielwymark.cmmodels.core.model.PointedRestrictedModelGenerator;
+import com.danielwymark.cmmodels.core.model.RestrictedModelGenerator;
 import com.danielwymark.cmmodels.core.relations.BisimulationSolver;
+import com.danielwymark.cmmodels.core.relations.Block;
 import com.danielwymark.cmmodels.core.relations.NaiveBisimulationSolver;
 import com.danielwymark.cmmodels.core.relations.Relation;
+import com.danielwymark.cmmodels.core.syntax.Formula;
+import com.danielwymark.cmmodels.core.syntax.SequentialFormulaGenerator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.sound.midi.SysexMessage;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BisimilarityTest {
+
+    @Test
+    public void BisimilarityRespectsInvarianceLemma() {
+        final List<Formula> formulas = new SequentialFormulaGenerator().generate().limit(1000).toList();
+        final Set<Model> models = new RestrictedModelGenerator().generate()
+                .skip(1000) // only look at relatively large models
+                .limit(1000)
+                .collect(Collectors.toSet());
+        final Evaluator evaluator = new NaiveEvaluator();
+        final NaiveBisimulationSolver bisimulationSolver = new NaiveBisimulationSolver();
+        models.parallelStream().forEach(model1 -> {
+            models.parallelStream().forEach(model2 -> {
+                if (model1 == model2)
+                    return;
+                Relation bisimulation = bisimulationSolver.findLargestBisimulation(model1, model2);
+                var modelMap = Map.of(model1.getId(), model1, model2.getId(), model2);
+                for (var keyval : bisimulation.map().entrySet()) {
+                    var world = keyval.getKey();
+                    for (var otherWorld : keyval.getValue()) {
+                        var effectiveModel1 = modelMap.get(world.modelId());
+                        var effectiveModel2 = modelMap.get(otherWorld.modelId());
+                        for (var formula : formulas) {
+                            if (evaluator.evaluate(effectiveModel1, world, formula)
+                             != evaluator.evaluate(effectiveModel2, otherWorld, formula)) {
+                                System.out.println("(" + model1.modelNumber() + "," + world.index() + ") ~ (" + model2.modelNumber() + "," + otherWorld.index() + ")");
+                                System.out.println("Failed invariance lemma on " + formula);
+                                Assert.fail();
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        formulas.forEach(System.out::println);
+    }
 
     @Test
     public void PointedModelsDontBreakBisimulationSolver() {
