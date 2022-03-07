@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.text.html.Option;
+import java.awt.*;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -20,14 +21,11 @@ public class ModelBuilder {
     private final Logger logger = LogManager.getLogger(ModelBuilder.class);
 
     private int numWorlds;
-    private final HashMap<Integer, Set<Integer>> tentativeAccessMap;
-    private final HashMap<Integer, Set<String>> tentativeValuationMap;
+    private final HashMap<Integer, Set<Integer>> tentativeAccessMap = new HashMap<>();
+    private final HashMap<Integer, Set<String>> tentativeValuationMap = new HashMap<>();
     private Optional<Integer> pointedWorld = Optional.empty();
 
     public ModelBuilder(String modelNum) {
-        tentativeAccessMap = new HashMap<>();
-        tentativeValuationMap = new HashMap<>();
-
         Pattern r = Pattern.compile("[(]?(\\d+)w(\\d+)(,([0-9]+))?[)]?");
         Matcher m = r.matcher(modelNum);
         if (!m.matches())
@@ -60,12 +58,23 @@ public class ModelBuilder {
 
     public ModelBuilder(int numWorlds) {
         this.numWorlds = numWorlds;
-        tentativeAccessMap = new HashMap<>();
-        tentativeValuationMap = new HashMap<>();
     }
 
     public ModelBuilder() {
         this(0);
+    }
+
+    public ModelBuilder(ModelBuilder other) {
+        this.numWorlds = other.numWorlds;
+        this.pointedWorld = other.pointedWorld;
+        for (var entry : other.tentativeAccessMap.entrySet()) {
+            var set = new HashSet<>(entry.getValue());
+            tentativeAccessMap.put(entry.getKey(), set);
+        }
+        for (var entry : other.tentativeValuationMap.entrySet()) {
+            var set = new HashSet<>(entry.getValue());
+            tentativeValuationMap.put(entry.getKey(), set);
+        }
     }
 
     public static Model buildFromModelNumber(String modelNum) {
@@ -95,6 +104,25 @@ public class ModelBuilder {
                 tentativeValuationMap.remove(world);
             }
         }
+    }
+
+    public void addModel(PointedModel model) {
+        int zero = this.numWorlds;
+        this.numWorlds += model.numWorlds;
+        for (int i = 0; i < model.numWorlds; ++i) {
+            this.tentativeValuationMap.put(
+                    zero + i,
+                    model.propositionsTrueAt(i).stream()
+                            .map(formula -> formula.letter)
+                            .collect(Collectors.toSet())
+            );
+            for (int j = 0; j < model.numWorlds; ++j) {
+                if (model.accessible(i, j)) {
+                    addRelation(zero + i, zero + j);
+                }
+            }
+        }
+        pointedWorld.ifPresent(point -> addRelation(point, zero + model.getPointedWorld().index()));
     }
 
     public void addRelation(int w1, int w2) {

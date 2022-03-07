@@ -3,6 +3,7 @@ package com.danielwymark.cmmodels;
 import com.danielwymark.cmmodels.core.model.Model;
 import com.danielwymark.cmmodels.core.model.ModelBuilder;
 import com.danielwymark.cmmodels.core.model.RestrictedModelGenerator;
+import com.danielwymark.cmmodels.core.model.TreeGenerator;
 import com.danielwymark.cmmodels.core.relations.BisimulationClassComputer;
 import com.danielwymark.cmmodels.core.relations.NaiveBisimulationSolver;
 import com.danielwymark.cmmodels.core.relations.Relation;
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@SuppressWarnings("unused")
 public class AdhocTests {
     private static void testGraphvizSingleModel() {
         final int NUM_WORLDS = 4;
@@ -69,7 +71,7 @@ public class AdhocTests {
         System.out.println(solver.findLargestBisimulation(model1, model2));
     }
 
-    public static void main(String[] args) {
+    private static void bruteForceBisimulationClassComputation() {
         var bisimulationComputer = new BisimulationClassComputer();
         long threshold = 1000;
         while (true) {
@@ -79,5 +81,18 @@ public class AdhocTests {
                 threshold *= 1.15;
             }
         }
+    }
+
+    public static void main(String[] args) {
+        var treeGenerator = new TreeGenerator();
+        treeGenerator.generate().limit(100).forEach(model -> {
+            try {
+                Graphviz.fromGraph(model.generateGraph())
+                        .height(600).render(Format.PNG).toFile(new File(model.modelNumber() + ".png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(-1);
+            }
+        });
     }
 }
