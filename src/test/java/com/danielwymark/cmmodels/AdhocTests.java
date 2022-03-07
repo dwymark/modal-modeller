@@ -3,6 +3,7 @@ package com.danielwymark.cmmodels;
 import com.danielwymark.cmmodels.core.model.Model;
 import com.danielwymark.cmmodels.core.model.ModelBuilder;
 import com.danielwymark.cmmodels.core.model.RestrictedModelGenerator;
+import com.danielwymark.cmmodels.core.relations.BisimulationClassComputer;
 import com.danielwymark.cmmodels.core.relations.NaiveBisimulationSolver;
 import com.danielwymark.cmmodels.core.relations.Relation;
 import guru.nidi.graphviz.engine.Format;
@@ -69,24 +70,14 @@ public class AdhocTests {
     }
 
     public static void main(String[] args) {
-        var modelBuilder = new ModelBuilder();
-        modelBuilder.addRelation(0, 1);
-        modelBuilder.addRelation(0, 2);
-        modelBuilder.addRelation(2, 3);
-        Model model1 = modelBuilder.build();
-
-        modelBuilder = new ModelBuilder();
-        modelBuilder.addRelation(0, 1);
-        modelBuilder.addRelation(0, 2);
-        modelBuilder.addRelation(1, 2);
-        Model model2 = modelBuilder.build();
-
-        Relation bisimulation = new NaiveBisimulationSolver().findLargestBisimulation(model1, model2);
-        try {
-            Graphviz.fromGraph(bisimulation.generateGraph())
-                    .height(600).render(Format.PNG).toFile(new File("test.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        var bisimulationComputer = new BisimulationClassComputer();
+        long threshold = 1000;
+        while (true) {
+            bisimulationComputer.analyzeNextModel();
+            if (bisimulationComputer.getNumModelsAnalyzed() > threshold) {
+                System.out.println(threshold + ": " + bisimulationComputer.getClassesPerSize());
+                threshold *= 1.15;
+            }
         }
     }
 }
